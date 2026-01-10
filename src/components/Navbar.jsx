@@ -23,7 +23,7 @@ const Navbar = () => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <a href='#hero'>
+        <a href='#start-screen'>
           <h1 className='text-2xl text-gray-400 hover:text-amber-50 duration-300 font-bold'>
             Arya Shrestha
           </h1>

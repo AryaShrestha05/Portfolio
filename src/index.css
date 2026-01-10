@@ -15,12 +15,23 @@ h1 {
 }
 
 /* 🌐 Global layout styles */
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   width: 100%;
   background-color: transparent;
   color: white;
-  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+/* Smooth scrolling with momentum for better performance */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* 🔁 Custom utility classes */
@@ -57,7 +68,7 @@ body {
     }
   }
 
-  #hero {
+  #start-screen {
     @apply relative z-10 min-h-screen w-full border border-transparent;
     
   }

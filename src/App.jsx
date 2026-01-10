@@ -1,16 +1,23 @@
-import heroVideo from "/src/assets/videos/heroVid.mp4";
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import About from "./components/About";
 import Video from "./components/Video";
+import Navbar from "./components/Navbar";
+import StartScreen from "./components/StartScreen";
+import About from "./components/About";
+import Experience from "./components/Experience";
+import Projects from "./components/Projects";
+import Beyond from "./components/Beyond";
+import Contacts from "./components/Contacts";
 
 function App() {
   return (
     <>
       <Video />
       <Navbar />
-      <Hero />
+      <StartScreen />
       <About />
+      <Experience />
+      <Projects />
+      <Beyond />
+      <Contacts />
     </>
   );
 }

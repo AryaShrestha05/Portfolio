@@ -1,34 +1,120 @@
-const About = () => {
-  return (
-    <section id="aboutme" className="py-20 px-6 bg-transparent text-white">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-8 items-stretch">
+import React, { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import headshot from '../assets/photos/Arya_S_Headshot.jpg';
 
-        {/* Left: Profile Info — spans 2 of 5 columns */}
-        <div id="pfp" className="bg-black/60 border-1 border-gray-900 rounded-3xl p-6 md:col-span-2 flex flex-col justify-between">
-          <div className="flex flex-col items-center"
+gsap.registerPlugin(ScrollTrigger);
+
+const About = () => {
+  const sectionRef = useRef();
+  const aboutTextRef = useRef();
+  const meTextRef = useRef();
+  const cardRef = useRef();
+  const imageCardRef = useRef();
+
+  useEffect(() => {
+    // 1. Initial Entrance Animation (Just for opacity/visibility)
+    gsap.fromTo([aboutTextRef.current, meTextRef.current, cardRef.current, imageCardRef.current],
+      { opacity: 0 },
+      { 
+        opacity: 1, 
+        duration: 1, 
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+        }
+      }
+    );
+
+    // 2. Scroll-based Parallax (STUCK TO SCROLL)
+    // The cards will be at y: 0 when the section is in the center of the viewport
+    const parallaxTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top bottom", // Animation starts when section enters bottom
+        end: "bottom top",    // Animation ends when section leaves top
+        scrub: 1,
+      },
+    });
+
+    parallaxTl
+      // Background text moves horizontally
+      .fromTo(aboutTextRef.current, { x: 150 }, { x: -150, ease: "none" }, 0)
+      .fromTo(meTextRef.current, { x: -150 }, { x: 150, ease: "none" }, 0)
+      
+      // Vertical card movement: 
+      // Starts at 100px down, moves to -100px up. 
+      // Result: At the exact center of the scroll, y is 0.
+      .fromTo(cardRef.current, { y: 100 }, { y: -100, ease: "none" }, 0)
+      .fromTo(imageCardRef.current, { y: 200 }, { y: -200, ease: "none" }, 0);
+      
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      id="about"
+      className="min-h-screen py-20 bg-transparent text-white flex flex-col items-center justify-center overflow-hidden"
+    >
+      {/* Parallax Headers */}
+      <div className="flex flex-col items-center mb-16 select-none pointer-events-none">
+        <h3 
+          ref={aboutTextRef} 
+          className="text-9xl font-thin lowercase tracking-tighter whitespace-nowrap"
+        >
+          about
+        </h3>
+        <h3 
+          ref={meTextRef} 
+          className="text-9xl font-thin lowercase tracking-tighter whitespace-nowrap"
+        >
+          me
+        </h3>
+      </div>
+
+      {/* Content Container */}
+      <div className="container mx-auto max-w-6xl px-5">
+        <div className="flex flex-col md:flex-row gap-8 items-start">
+          {/* Left: Info Card */}
+          <div 
+            ref={cardRef} 
+            className="flex-1 bg-gray-900/10 backdrop-blur-xl p-10 rounded-[3rem] border border-white/10 z-10"
           >
-            <a href="#hero">
-              <img 
-                src="/src/assets/photos/cartoonpfp2.png" 
-                alt="Profile"
-                className="w-40 h-40 rounded-full object-cover mb-4 shadow-lg shadow-gray-600 opacity-80"
-              />
-            </a>
-            <h2 className="text-3xl font-bold text-white mb-2">Who am I?</h2>
-            <p className="text-white text-center leading-relaxed">
-              I'm Arya, a full-stack developer driven by a deep interest in how software, data, and intelligent systems shape the world around us. My work sits at the intersection of engineering and curiosity. Whether it's building clean, scalable tools or exploring how machine learning can turn insight into action.
+            <p className="text-white text-2xl font-semibold mb-6 lowercase">
+              i'm arya, but i'm also:
             </p>
+            
+            <ul className="list-disc list-inside text-gray-300 text-lg space-y-4 leading-relaxed lowercase">
+              <li>
+                studying <span className="text-white font-medium">computer science</span> @ marist university, poughkeepsie ny.
+              </li>
+              <li>
+                previous swe intern @ <span className="text-white font-medium">docere</span>, a lms platform educating underprivileged students in minnesota.
+              </li>
+              <li>
+                working with louisiana attorneys to <span className="text-white font-medium">automate trust/will document creation</span>.
+              </li>
+              <li>
+                tech fellow @ <span className="text-white font-medium">headstart fellowship</span>.
+              </li>
+              <li>
+                phase 2 fellow @ <span className="text-white font-medium">propel2excel</span>.
+              </li>
+            </ul>
+          </div>
+
+          {/* Right: Image Card */}
+          <div 
+            ref={imageCardRef}
+            className="flex-shrink-0 bg-gray-900/10 backdrop-blur-xl p-4 rounded-[3rem] border border-white/10 z-10"
+          >
+            <img 
+              src={headshot} 
+              alt="Arya Shrestha" 
+              className="w-64 h-80 object-cover rounded-[2.5rem]"
+            />
           </div>
         </div>
-
-        {/* Right: Detailed About Section — spans 3 of 5 columns */}
-        <div id="aboutMe" className="bg-black/60 rounded-2xl p-6 shadow-lg md:col-span-3 flex flex-col justify-center border-1 border-gray-900">
-          <h2 className="text-3xl font-bold text-white mb-4">About Me</h2>
-          <p className="text-black text-base leading-relaxed">
-            I’m a passionate frontend developer who loves crafting intuitive, aesthetic digital experiences. Currently diving into animation frameworks like GSAP and experimenting with modern UI/UX tools. I enjoy merging creativity with code, and I'm constantly exploring how to bring more life to the web.
-          </p>
-        </div>
-
       </div>
     </section>
   );
