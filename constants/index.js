@@ -1,26 +1,22 @@
 export const navLinks = [
   {
-    id: 'start-screen',
-    title: 'Start',
-  },
-  {
     id: 'about',
-    title: 'About',
+    title: 'about',
   },
   {
     id: 'experience',
-    title: 'Experience',
+    title: 'experience',
   },
   {
     id: 'projects',
-    title: 'Projects',
+    title: 'projects',
   },
   {
     id: 'beyond',
-    title: 'Beyond',
+    title: 'beyond',
   },
   {
     id: 'contacts',
-    title: 'Contacts',
+    title: 'contacts',
   },
 ];

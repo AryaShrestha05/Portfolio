@@ -9,7 +9,8 @@ const Beyond = () => {
   const contentRef = useRef();
 
   useEffect(() => {
-    gsap.fromTo(contentRef.current,
+    gsap.fromTo(
+      contentRef.current,
       { opacity: 0, y: 50 },
       {
         opacity: 1,
@@ -30,12 +31,14 @@ const Beyond = () => {
     <section
       ref={sectionRef}
       id="beyond"
-      className="min-h-screen py-20 px-5 bg-transparent flex items-center justify-center"
+      className="min-h-screen py-20 px-5 flex items-center justify-center"
     >
-      <div ref={contentRef} className="container mx-auto max-w-4xl">
-        <h2 className="text-5xl font-bold text-white text-center mb-12">Beyond</h2>
-        <div className="bg-gray-800/80 backdrop-blur-sm p-8 rounded-lg">
-          <p className="text-gray-300 text-lg leading-relaxed">
+      <div ref={contentRef} className="w-full max-w-4xl">
+        <h2 className="text-5xl font-bold text-center mb-12 text-foreground">
+          Beyond
+        </h2>
+        <div className="glass-card p-8">
+          <p className="text-lg leading-relaxed text-muted-foreground">
             Additional information about you will go here.
           </p>
         </div>

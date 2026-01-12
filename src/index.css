@@ -1,75 +1,328 @@
-/* ✅ Google Fonts MUST come first */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-
-/* ✅ Tailwind layers */
 @import "tailwindcss";
 
-/* 🔧 Custom font variable */
-:root {
-  --font-primary: 'Inter', sans-serif;
+/* ===========================================
+   THEME CONFIGURATION
+   ===========================================
+   This file defines the global theme system.
+   - Light mode: Black text (#000) on white background (#fff)
+   - Dark mode: White text (#fff) on black background (#000)
+
+   To change colors globally, modify the CSS variables below.
+   All components inherit from these variables automatically.
+=========================================== */
+
+@theme {
+  --font-primary: "Georgia", "Times New Roman", serif;
 }
 
-/* 🖋 Apply font to h1s */
-h1 {
-  font-family: var(--font-primary);
-}
+/* ===========================================
+   BASE LAYER - Theme Variables & Defaults
+=========================================== */
+@layer base {
+  /* -----------------------------------------
+     LIGHT MODE (Default)
+     Black text on white background
+  ----------------------------------------- */
+  :root {
+    /* Typography */
+    --font-primary: "Georgia", "Times New Roman", serif;
 
-/* 🌐 Global layout styles */
-html {
-  scroll-behavior: smooth;
-}
+    /* Core Colors - Light Mode */
+    --color-foreground: #000000;
+    --color-background: #ffffff;
 
-html,
-body {
-  width: 100%;
-  background-color: transparent;
-  color: white;
-  overflow-x: hidden;
-}
+    /* Muted Colors - For secondary text and disabled states */
+    --color-muted: #f3f4f6;
+    --color-muted-foreground: #4b5563;
 
-/* Smooth scrolling with momentum for better performance */
-@media (prefers-reduced-motion: no-preference) {
+    /* Border Colors */
+    --color-border: rgba(0, 0, 0, 0.12);
+
+    /* Card Colors - For glassmorphism cards */
+    --color-card: rgba(255, 255, 255, 0.6);
+    --color-card-foreground: #000000;
+
+    /* Accent Colors - For highlights and interactive elements */
+    --color-accent: #3b82f6;
+    --color-accent-foreground: #ffffff;
+
+    /* Shadows */
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.08);
+    --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.12);
+  }
+
+  /* -----------------------------------------
+     DARK MODE
+     White text on black background
+  ----------------------------------------- */
+  .dark {
+    /* Core Colors - Dark Mode */
+    --color-foreground: #ffffff;
+    --color-background: #000000;
+
+    /* Muted Colors */
+    --color-muted: #1f2937;
+    --color-muted-foreground: #9ca3af;
+
+    /* Border Colors */
+    --color-border: rgba(255, 255, 255, 0.12);
+
+    /* Card Colors */
+    --color-card: rgba(17, 24, 39, 0.6);
+    --color-card-foreground: #ffffff;
+
+    /* Accent Colors (same in both modes for consistency) */
+    --color-accent: #60a5fa;
+    --color-accent-foreground: #000000;
+
+    /* Shadows */
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.4);
+  }
+
+  /* -----------------------------------------
+     Global Element Styles
+  ----------------------------------------- */
   html {
     scroll-behavior: smooth;
   }
-}
 
-/* 🔁 Custom utility classes */
-@utility flex-center {
-  @apply flex items-center justify-center;
-}
-
-@utility col-center {
-  @apply flex flex-col items-center
-}
-
-@layer components {
-  main {
-    @apply w-full overflow-x-hidden;
+  html,
+  body {
+    width: 100%;
+    overflow-x: hidden;
   }
 
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-primary);
+    transition: background-color 300ms ease, color 300ms ease;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Typography - All text inherits theme colors */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-primary);
+    color: var(--color-foreground);
+    transition: color 300ms ease;
+  }
+
+  p, span, li {
+    color: var(--color-foreground);
+    transition: color 300ms ease;
+  }
+
+  a {
+    color: var(--color-foreground);
+    transition: color 200ms ease, opacity 200ms ease;
+  }
+
+  a:hover {
+    opacity: 0.7;
+  }
+
+  /* Selection styling */
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-accent-foreground);
+  }
+}
+
+/* ===========================================
+   COMPONENT LAYER - Reusable Components
+=========================================== */
+@layer components {
+  /* -----------------------------------------
+     Navigation
+  ----------------------------------------- */
   nav {
     @apply fixed z-50 w-full;
 
-    div {
+    & > div {
       @apply flex md:flex-row flex-col md:justify-between items-center gap-5 py-5 lg:px-0 px-5 container mx-auto;
     }
 
-    p {
-      @apply text-3xl -mb-2;
+    & a {
+      @apply cursor-pointer whitespace-nowrap md:text-base text-sm;
     }
 
-    a {
-      @apply cursor-pointer text-nowrap md:text-base text-sm;
-    }
-
-    ul {
-      @apply flex-center lg:gap-12 gap-7;
+    & ul {
+      @apply flex items-center justify-center lg:gap-12 gap-7;
     }
   }
 
+  /* -----------------------------------------
+     Start Screen Section
+  ----------------------------------------- */
   #start-screen {
-    @apply relative z-10 min-h-screen w-full border border-transparent;
-    
+    @apply relative z-10 min-h-screen w-full;
   }
+
+  /* -----------------------------------------
+     Glass Card - Primary card style
+  ----------------------------------------- */
+  .glass-card {
+    background-color: var(--color-card);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--color-border);
+    border-radius: 3rem;
+    box-shadow: var(--shadow-card);
+    transition:
+      background-color 300ms ease,
+      border-color 300ms ease,
+      box-shadow 300ms ease;
+  }
+
+  .glass-card:hover {
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  /* -----------------------------------------
+     Buttons
+  ----------------------------------------- */
+  .btn {
+    @apply px-6 py-2 rounded-full font-medium;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-card);
+    color: var(--color-foreground);
+    transition:
+      background-color 300ms ease,
+      border-color 300ms ease,
+      color 300ms ease,
+      transform 200ms ease;
+  }
+
+  .btn:hover {
+    background-color: var(--color-muted);
+    transform: translateY(-1px);
+  }
+
+  .btn:active {
+    transform: translateY(0);
+  }
+
+  .btn-outline {
+    @apply px-8 py-3 rounded-full font-medium;
+    border: 2px solid var(--color-foreground);
+    background-color: transparent;
+    color: var(--color-foreground);
+    transition:
+      background-color 300ms ease,
+      border-color 300ms ease,
+      color 300ms ease,
+      transform 200ms ease;
+  }
+
+  .btn-outline:hover {
+    background-color: var(--color-foreground);
+    color: var(--color-background);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline:active {
+    transform: translateY(0);
+  }
+
+  /* -----------------------------------------
+     Section Title - Large parallax text
+  ----------------------------------------- */
+  .section-title {
+    @apply text-7xl sm:text-8xl lg:text-9xl font-thin lowercase tracking-tighter whitespace-nowrap select-none;
+    color: var(--color-foreground);
+    opacity: 0.15;
+    transition: color 300ms ease, opacity 300ms ease;
+  }
+
+  /* -----------------------------------------
+     Text Utilities with Theme Support
+  ----------------------------------------- */
+  .text-primary {
+    color: var(--color-foreground);
+    transition: color 300ms ease;
+  }
+
+  .text-secondary {
+    color: var(--color-muted-foreground);
+    transition: color 300ms ease;
+  }
+
+  .text-accent {
+    color: var(--color-accent);
+    transition: color 300ms ease;
+  }
+
+  /* -----------------------------------------
+     Container Utilities
+  ----------------------------------------- */
+  .section-container {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .content-container {
+    @apply max-w-6xl mx-auto;
+  }
+}
+
+/* ===========================================
+   UTILITY LAYER - Helper Classes
+=========================================== */
+@layer utilities {
+  /* Flexbox shortcuts */
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .col-center {
+    @apply flex flex-col items-center;
+  }
+
+  /* Theme transition - Apply to elements that should animate on theme change */
+  .theme-transition {
+    transition:
+      background-color 300ms ease,
+      color 300ms ease,
+      border-color 300ms ease,
+      box-shadow 300ms ease;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Text balance for better line breaks */
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* ===========================================
+   ACCESSIBILITY
+=========================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Focus visible styles for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }

@@ -48,24 +48,23 @@ const StartScreen = () => {
   return (
     <section
       id="start-screen"
-      className="min-h-screen bg-transparent text-white flex flex-col items-center justify-center space-y-10 overflow-hidden"
+      className="min-h-screen w-full flex flex-col items-center justify-center space-y-10 overflow-hidden"
     >
       <h1
         ref={trigRef}
-        className="text-9xl font-thin whitespace-nowrap"
+        className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-thin whitespace-nowrap text-foreground transition-colors duration-300"
       >
         Arya Arya Arya Arya Arya Arya Arya Arya Arya Arya
       </h1>
       <h1
         ref={trigRefTwo}
-        className="text-9xl font-bold whitespace-nowrap"
+        className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold whitespace-nowrap text-foreground transition-colors duration-300"
       >
         Shrestha Shrestha Shrestha Shrestha Shrestha Shrestha
       </h1>
       <button
         ref={btnRef}
-        className="flex-center bg-transparent border-2 border-amber-50 transition-smooth rounded-full px-8 py-2 text-2xl
-        hover:bg-white hover:text-black"
+        className="btn-outline text-xl sm:text-2xl"
       >
         resume
       </button>

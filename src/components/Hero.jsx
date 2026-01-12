@@ -52,7 +52,7 @@ const Hero = () => {
     <>
       <section
         id="hero"
-        className="min-h-screen bg-transparent text-white flex flex-col items-center justify-center space-y-10 overflow-hidden"
+        className="min-h-screen bg-transparent text-black dark:text-white flex flex-col items-center justify-center space-y-10 overflow-hidden"
       >
         <h1
           ref={trigRef}
@@ -69,7 +69,7 @@ const Hero = () => {
         <button
           ref={btnRef}
           className="flex-center bg-transparent border-2 border-amber-50 transition-smooth rounded-full px-8 py-2 text-2xl
-          hover:bg-white hover:text-black"
+          hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black"
         >
           resume
         </button>

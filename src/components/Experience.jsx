@@ -2,6 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+import docereLogo from '../assets/photos/docere.jpeg';
+import maristLogo from '../assets/photos/marist.jpeg';
+import headstartLogo from '../assets/photos/headstart.jpeg';
+import propelLogo from '../assets/photos/propel2excel.jpeg';
+import colorstackLogo from '../assets/photos/colorstack.jpeg';
+
 gsap.registerPlugin(ScrollTrigger);
 
 const Experience = () => {
@@ -9,184 +15,205 @@ const Experience = () => {
   const experienceTextRef = useRef();
   const sliderRef = useRef();
   const pinContainerRef = useRef();
+  const cardsRef = useRef([]);
 
   useEffect(() => {
-    // Wait for layout to calculate proper widths
-    const calculateScroll = () => {
-      if (!sliderRef.current || !pinContainerRef.current) return;
+    const slider = sliderRef.current;
+    const cards = cardsRef.current;
 
-      const scrollWidth = sliderRef.current.scrollWidth;
-      const viewportWidth = window.innerWidth;
-      const amountToScroll = scrollWidth - viewportWidth;
-
-      // 1. Initial Entrance Animation with smooth easing
-      const entranceTl = gsap.timeline({
+    gsap.fromTo(
+      [experienceTextRef.current, sliderRef.current],
+      { opacity: 0, y: 30 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
+        ease: "power3.out",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top 80%",
-          toggleActions: "play none none none",
-          once: true // Only play once for performance
         }
-      });
+      }
+    );
 
-      // Set initial states for smooth animation
-      gsap.set([experienceTextRef.current, sliderRef.current], {
-        opacity: 0,
-        y: 50,
-        force3D: true // Force GPU acceleration
-      });
-
-      entranceTl.to([experienceTextRef.current, sliderRef.current],
-        { 
-          opacity: 1, 
-          y: 0,
-          duration: 1.2, 
-          ease: "power2.out",
-          stagger: 0.15,
-          force3D: true
-        }
-      );
-
-      // 2. PINNING & HORIZONTAL SCROLL with smooth interpolation
-      const pinTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: pinContainerRef.current,
-          start: "top top",
-          end: () => `+=${amountToScroll + viewportWidth}`,
-          pin: true,
-          scrub: 0.3, // Very smooth interpolation (lower = smoother)
-          fastScrollEnd: true, // Handle fast scrolling better
-          anticipatePin: 1,
-          pinSpacing: true,
-          invalidateOnRefresh: true,
-        }
-      });
-
-      pinTl.to(sliderRef.current, {
-        x: () => -(sliderRef.current.scrollWidth - window.innerWidth),
+    gsap.fromTo(
+      experienceTextRef.current,
+      { x: -250 },
+      {
+        x: 250,
         ease: "none",
-        force3D: true // GPU acceleration for smooth performance
-      });
-
-      // 3. BACKGROUND TEXT PARALLAX with smooth interpolation
-      const parallaxTrigger = ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: 0.5, // Smooth interpolation for parallax
-        onUpdate: (self) => {
-          const progress = self.progress;
-          if (experienceTextRef.current) {
-            gsap.set(experienceTextRef.current, {
-              x: 150 - (progress * 300),
-              force3D: true // GPU acceleration
-            });
-          }
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: () => `+=${slider.scrollWidth + window.innerHeight}`,
+          scrub: 1,
         }
-      });
+      }
+    );
 
-      // 4. SMOOTH EXIT ANIMATION when pin is released - smooth transition after unpin
-      // This handles the smooth animation when the section unpins and scrolls out
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: 0.25, // Smooth interpolation - balances responsiveness with smoothness
-        onUpdate: (self) => {
-          // Only animate exit when section is leaving bottom of viewport
-          if (self.progress > 0.8 && experienceTextRef.current && sliderRef.current) {
-            const exitProgress = (self.progress - 0.8) / 0.2; // Scale 0.8-1.0 to 0-1.0
-            gsap.set([experienceTextRef.current, sliderRef.current], {
-              opacity: 1 - exitProgress,
-              y: exitProgress * -40,
-              force3D: true,
-              willChange: 'transform, opacity' // Hint browser for optimization
-            });
-          } else if (self.progress <= 0.8 && experienceTextRef.current && sliderRef.current) {
-            // Reset when coming back into view
-            gsap.set([experienceTextRef.current, sliderRef.current], {
-              opacity: 1,
-              y: 0,
-              force3D: true
-            });
-          }
+    const pinTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: pinContainerRef.current,
+        start: "top top",
+        end: () => `+=${slider.scrollWidth}`,
+        pin: true,
+        scrub: 1,
+        invalidateOnRefresh: true,
+      }
+    });
+
+    pinTl.to(slider, {
+      x: () => -(slider.scrollWidth - window.innerWidth),
+      ease: "none",
+    });
+
+    gsap.set(cards, { scale: 0.6, opacity: 0 });
+
+    cards.forEach((card) => {
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: card,
+          containerAnimation: pinTl,
+          start: "left 95%",
+          end: "right 5%",
+          scrub: true,
         }
-      });
-    };
+      })
+        .to(card, { opacity: 1, scale: 0.85, ease: "power2.inOut" })
+        .to(card, { opacity: 0, scale: 0.6, ease: "power2.inOut" });
+    });
 
-    // Calculate after a small delay to ensure DOM is ready
-    const timeoutId = setTimeout(calculateScroll, 100);
-
-    // Recalculate on resize
-    const handleResize = () => {
-      ScrollTrigger.refresh();
-      setTimeout(calculateScroll, 100);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener('resize', handleResize);
-      // Kill all ScrollTriggers for this component
-      ScrollTrigger.getAll().forEach(trigger => {
-        if (trigger.vars && (
-          trigger.vars.trigger === pinContainerRef.current ||
-          trigger.vars.trigger === sectionRef.current ||
-          trigger.trigger === pinContainerRef.current ||
-          trigger.trigger === sectionRef.current
-        )) {
-          trigger.kill();
-        }
-      });
-    };
+    return () => ScrollTrigger.getAll().forEach(t => t.kill());
   }, []);
 
-  const items = [1, 2, 3, 4, 5];
+  const items = [
+    {
+      role: 'software engineer intern',
+      company: 'docere',
+      logo: docereLogo,
+      period: 'jun 2025 – sep 2025',
+      points: [
+        'shipped ai learning platform for 50+ users',
+        'designed rest apis for ai tutoring pipelines',
+        'built automated notification systems'
+      ]
+    },
+    {
+      role: 'lms quality developer',
+      company: 'marist university',
+      logo: maristLogo,
+      period: 'apr 2025 – present',
+      isMarist: true,
+      points: [
+        'developed 150+ page digital education site',
+        'audited 3,000+ courses for wcag ',
+        'resolved platform issues via jira'
+      ]
+    },
+    {
+      role: 'tech fellow',
+      company: 'headstart fellowship',
+      logo: headstartLogo,
+      period: 'july 2025 – dec 2025',
+      points: [
+        'collaborated on community tech growth',
+        'participated in technical leadership tracks',
+        'engaged in agile-driven sprint cycles'
+      ]
+    },
+    {
+      role: 'phase 2 fellow',
+      company: 'propel2excel',
+      logo: propelLogo,
+      period: '2025',
+      points: [
+        'advanced to specialized fellowship phase',
+        'mastered full-stack architecture patterns',
+        'built scalable project deployments'
+      ]
+    },
+    {
+      role: 'colorstack fellow',
+      company: 'colorstack',
+      logo: colorstackLogo,
+      period: '2025',
+      points: [
+        'engaged in black/latinx tech community',
+        'utilized career development resources',
+        'participated in technical workshops'
+      ]
+    },
+  ];
 
   return (
-    <section 
-      ref={sectionRef} 
-      id="experience"
-      className="relative min-h-[200vh] bg-transparent"
-    >
-      {/* This container gets pinned */}
-      <div 
-        ref={pinContainerRef} 
-        className="h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-transparent"
-      >
-        {/* Parallax Header - Exact same style as About Me */}
-        <div className="flex flex-col items-center mb-16 select-none pointer-events-none absolute top-20 z-20">
-          <h3 
-            ref={experienceTextRef} 
-            className="text-9xl font-thin lowercase tracking-tighter whitespace-nowrap text-white"
-          >
+    <section ref={sectionRef} id="experience" className="relative overflow-hidden">
+      <div ref={pinContainerRef} className="h-screen w-full flex flex-col items-center justify-center">
+        {/* Background Title */}
+        <div className="absolute top-[15vh] w-full flex justify-center z-0 pointer-events-none">
+          <h3 ref={experienceTextRef} className="section-title">
             experience
           </h3>
         </div>
 
-        {/* Horizontal Slider Container */}
-        <div className="w-full overflow-visible mt-32">
-          <div 
-            ref={sliderRef} 
-            className="flex gap-12 items-center will-change-transform"
-            style={{ 
+        {/* Cards Slider */}
+        <div className="w-full flex items-center relative z-10 mt-[10vh]">
+          <div
+            ref={sliderRef}
+            className="flex items-center"
+            style={{
               width: 'max-content',
-              transform: 'translateZ(0)', // Force GPU acceleration
-              backfaceVisibility: 'hidden' // Smooth rendering
+              paddingLeft: 'calc(50vw - 200px)',
+              paddingRight: '50vw'
             }}
           >
-            {items.map((_, index) => (
-              <div 
+            {items.map((item, index) => (
+              <div
                 key={index}
-                className="flex-shrink-0 w-[80vw] md:w-[500px] h-[550px] bg-gray-900/10 backdrop-blur-xl p-10 rounded-[3rem] border border-white/10 z-10 flex flex-col"
+                ref={el => cardsRef.current[index] = el}
+                className="flex-shrink-0 w-[350px] md:w-[400px] h-[420px] glass-card p-10 flex flex-col shadow-xl rounded-3xl"
               >
-                <span className="text-white/10 text-8xl font-bold lowercase">0{index + 1}</span>
-                {/* Space for your content */}
+                {/* Logo Section */}
+                <div className="w-16 h-16 mb-6 flex items-center justify-center overflow-hidden rounded-xl border border-border bg-card">
+                  <img
+                    src={item.logo}
+                    alt={item.company}
+                    className={`w-full h-full object-cover ${item.isMarist ? 'scale-110' : ''}`}
+                  />
+                </div>
+
+                {/* Company Name */}
+                <h4 className="text-3xl font-bold mb-1 text-foreground">
+                  {item.company}
+                </h4>
+
+                {/* Role & Period */}
+                <p className="text-[13px] font-semibold mb-6 uppercase tracking-widest text-muted-foreground">
+                  {item.role} • {item.period}
+                </p>
+
+                {/* Points */}
+                <ul className="space-y-3 mb-6">
+                  {item.points.map((point, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <span className="text-xl mt-[-6px] text-foreground">•</span>
+                      <p className="text-[15px] leading-snug font-light lowercase text-foreground">
+                        {point}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Action Buttons */}
+                <div className="flex gap-3 mt-auto">
+                  <button className="btn text-[11px] font-bold uppercase tracking-tighter">
+                    my team
+                  </button>
+                  <button className="btn text-[11px] font-bold uppercase tracking-tighter">
+                    my project
+                  </button>
+                </div>
               </div>
             ))}
-            {/* End Spacer to ensure last card is fully visible */}
-            <div className="flex-shrink-0 w-[50vw] md:w-[30vw]" />
           </div>
         </div>
       </div>
