@@ -1,11 +1,33 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://fonts.cdnfonts.com/css/satoshi" rel="stylesheet">
-    <title>Vite + React</title>
+    <title>Arya Shrestha | Portfolio</title>
+    <style>
+      /* Prevent flash of unstyled content */
+      html.dark {
+        background-color: #000000;
+        color-scheme: dark;
+      }
+      html:not(.dark) {
+        background-color: #ffffff;
+        color-scheme: light;
+      }
+    </style>
+    <script>
+      // Restore theme from localStorage before page renders
+      (function() {
+        const theme = localStorage.getItem('theme') || 'dark';
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

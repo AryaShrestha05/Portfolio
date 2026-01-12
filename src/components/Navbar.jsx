@@ -1,7 +1,8 @@
 import { useRef } from 'react';
 import { navLinks } from "../../constants/index.js";
 import { gsap } from 'gsap';
-import ThemeSwitcher from './ThemeSwitcher';
+import AnimatedThemeSwitcher from './AnimatedThemeSwitcher';
+import GooeyNav from './GooeyNav';
 
 const Navbar = () => {
   const navRef = useRef(null);
@@ -26,6 +27,13 @@ const Navbar = () => {
     });
   };
 
+  const handleNavigate = (href) => {
+    const element = document.querySelector(href);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <nav>
       <div
@@ -35,25 +43,47 @@ const Navbar = () => {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        <a href="#start-screen">
-          <h1 className="text-2xl font-bold text-foreground hover:opacity-70 transition-opacity duration-300">
-            home
-          </h1>
-        </a>
+        <GooeyNav onNavigate={handleNavigate}>
+          {(handleClick) => (
+            <a
+              href="#start-screen"
+              onClick={(e) => {
+                e.preventDefault();
+                handleClick(e, '#start-screen');
+              }}
+              data-cursor-hover
+            >
+              <h1 className="text-2xl font-bold text-foreground hover:opacity-70 transition-opacity duration-300">
+                home
+              </h1>
+            </a>
+          )}
+        </GooeyNav>
 
         <ul className="flex items-center">
-          {navLinks.map((link) => (
-            <li key={link.id}>
-              <a
-                href={`#${link.id}`}
-                className="text-foreground hover:opacity-70 transition-opacity duration-300"
-              >
-                {link.title}
-              </a>
-            </li>
-          ))}
+          <GooeyNav onNavigate={handleNavigate} className="contents">
+            {(handleClick) => (
+              <>
+                {navLinks.map((link) => (
+                  <li key={link.id}>
+                    <a
+                      href={`#${link.id}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleClick(e, `#${link.id}`);
+                      }}
+                      className="text-foreground hover:opacity-70 transition-opacity duration-300"
+                      data-cursor-hover
+                    >
+                      {link.title}
+                    </a>
+                  </li>
+                ))}
+              </>
+            )}
+          </GooeyNav>
           <li className="ml-4">
-            <ThemeSwitcher />
+            <AnimatedThemeSwitcher />
           </li>
         </ul>
       </div>
