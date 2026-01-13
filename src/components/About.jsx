@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import GlassSurface from './GlassSurface';
 import headshot from '../assets/photos/Arya_S_Headshot.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -68,7 +69,7 @@ const About = () => {
               i'm arya, but i'm also:
             </p>
 
-            <ul className="list-disc list-inside text-lg space-y-4 leading-relaxed lowercase text-muted-foreground">
+            <ul className="list-disc list-inside text-lg space-y-4 leading-relaxed lowercase text-muted-foreground font-sans">
               <li>
                 studying <span className="text-foreground font-medium">computer science</span> @ marist university, poughkeepsie ny.
               </li>

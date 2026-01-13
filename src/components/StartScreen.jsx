@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import RotatingText from './RotatingText';
+import ResumeModal from './ResumeModal';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -10,6 +11,7 @@ const StartScreen = () => {
   const trigRefTwo = useRef();
   const btnRef = useRef();
   const subtitleRef = useRef();
+  const [isResumeOpen, setIsResumeOpen] = useState(false);
 
   useEffect(() => {
     const textTop = gsap.timeline();
@@ -57,7 +59,8 @@ const StartScreen = () => {
   return (
     <section
       id="start-screen"
-      className="min-h-screen w-full flex flex-col items-center justify-center space-y-6 overflow-hidden"
+      /* Added font-primary class here to cover the whole section */
+      className="min-h-screen w-full flex flex-col items-center justify-center space-y-6 overflow-hidden font-primary"
     >
       {/* Main name display */}
       <h1
@@ -81,7 +84,7 @@ const StartScreen = () => {
             'im a full-stack developer',
             'im a problem solver',
             'im a tech enthusiast',
-            'im a doer'
+            'im Arya!'
           ]}
           interval={2500}
           className="text-foreground font-semibold"
@@ -92,11 +95,17 @@ const StartScreen = () => {
       {/* CTA Button */}
       <button
         ref={btnRef}
-        className="btn-outline text-xl sm:text-2xl mt-8"
+        className="btn-outline text-xl sm:text-2xl mt-8 font-primary"
         data-cursor-hover
+        /* Corrected style syntax to use the CSS variable properly */
+        style={{ fontFamily: 'var(--font-primary)' }}
+        onClick={() => setIsResumeOpen(true)}
       >
         resume
       </button>
+
+      {/* Resume Modal */}
+      <ResumeModal isOpen={isResumeOpen} onClose={() => setIsResumeOpen(false)} />
     </section>
   );
 };

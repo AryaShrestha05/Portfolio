@@ -1,94 +1,72 @@
 @import "tailwindcss";
 
 /* ===========================================
-   THEME CONFIGURATION
+   PORTFOLIO SITE - GLOBAL STYLES
    ===========================================
-   This file defines the global theme system.
-   - Light mode: Black text (#000) on white background (#fff)
-   - Dark mode: White text (#fff) on black background (#000)
+   Theme System:
+   - Light mode: Black text on white background
+   - Dark mode: White text on dark background
 
-   To change colors globally, modify the CSS variables below.
-   All components inherit from these variables automatically.
+   To customize colors, modify the CSS variables below.
+   All components inherit from these variables.
 =========================================== */
 
 @theme {
   --font-primary: "Georgia", "Times New Roman", serif;
+  --font-sans: "Satoshi", "Inter", system-ui, sans-serif;
 }
 
 /* ===========================================
    BASE LAYER - Theme Variables & Defaults
 =========================================== */
 @layer base {
-  /* -----------------------------------------
-     LIGHT MODE (Default)
-     Black text on white background
-  ----------------------------------------- */
+  /* Light Mode (Default) */
   :root {
-    /* Typography */
     --font-primary: "Georgia", "Times New Roman", serif;
 
-    /* Core Colors - Light Mode */
+    /* Core Colors */
     --color-foreground: #000000;
     --color-background: #ffffff;
 
-    /* Muted Colors - For secondary text and disabled states */
+    /* Muted Colors */
     --color-muted: #f3f4f6;
     --color-muted-foreground: #4b5563;
 
-    /* Border Colors */
+    /* Border & Card */
     --color-border: rgba(0, 0, 0, 0.12);
-
-    /* Card Colors - For glassmorphism cards */
     --color-card: rgba(255, 255, 255, 0.6);
     --color-card-foreground: #000000;
 
-    /* Accent Colors - For highlights and interactive elements */
+    /* Accent */
     --color-accent: #f97316;
     --color-accent-foreground: #ffffff;
 
     /* Shadows */
-    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.08);
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.662);
     --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.12);
   }
 
-  /* -----------------------------------------
-     DARK MODE
-     White text on black background
-  ----------------------------------------- */
+  /* Dark Mode */
   .dark {
-    /* Core Colors - Dark Mode */
-    --color-foreground: #ffffff;
-    --color-background: #000000;
-
-    /* Muted Colors */
-    --color-muted: #1f2937;
-    --color-muted-foreground: #9ca3af;
-
-    /* Border Colors */
-    --color-border: rgba(255, 255, 255, 0.12);
-
-    /* Card Colors */
-    --color-card: rgba(17, 24, 39, 0.6);
+    --color-background: #161515;
+    --color-foreground: #f5f5f5;
+    --color-muted: #171717;
+    --color-muted-foreground: #a3a3a3;
+    --color-border: rgba(255, 255, 255, 0.1);
+    --color-card: rgba(24, 24, 27, 0.6);
     --color-card-foreground: #ffffff;
-
-    /* Accent Colors (same in both modes for consistency) */
     --color-accent: #60a5fa;
     --color-accent-foreground: #000000;
-
-    /* Shadows */
-    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
-    --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.4);
+    --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.7);
   }
 
-  /* -----------------------------------------
-     Global Element Styles
-  ----------------------------------------- */
+  /* Global Defaults */
   html {
     scroll-behavior: smooth;
   }
 
-  html,
-  body {
+  html, body {
     width: 100%;
     overflow-x: hidden;
   }
@@ -102,7 +80,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Typography - All text inherits theme colors */
+  /* Typography */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-primary);
     color: var(--color-foreground);
@@ -123,20 +101,26 @@
     opacity: 0.7;
   }
 
-  /* Selection styling */
   ::selection {
-    background-color: var(--color-accent);
-    color: var(--color-accent-foreground);
+    background-color: var(--color-muted-foreground);
+    color: var(--color-background);
   }
 }
-
+@layer utilities {
+  .no-scroll {
+    /* Freeze everything in place */
+    position: fixed !important;
+    width: 100% !important;
+    overflow-y: scroll !important; /* Forces the scrollbar track to stay visible */
+    touch-action: none;
+    -webkit-overflow-scrolling: none;
+  }
+}
 /* ===========================================
    COMPONENT LAYER - Reusable Components
 =========================================== */
 @layer components {
-  /* -----------------------------------------
-     Navigation
-  ----------------------------------------- */
+  /* Navigation */
   nav {
     @apply fixed z-50 w-full;
 
@@ -153,46 +137,73 @@
     }
   }
 
-  /* -----------------------------------------
-     Start Screen Section
-  ----------------------------------------- */
+  /* Start Screen */
   #start-screen {
     @apply relative z-10 min-h-screen w-full;
   }
 
-  /* -----------------------------------------
-     Glass Card - Primary card style
-  ----------------------------------------- */
+  /* Glass Card */
   .glass-card {
-    background-color: var(--color-card);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid var(--color-border);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 3rem;
-    box-shadow: var(--shadow-card);
-    transition:
-      background-color 300ms ease,
-      border-color 300ms ease,
-      box-shadow 300ms ease;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    transition: background-color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+  }
+
+  .dark .glass-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .glass-card:hover {
-    box-shadow: var(--shadow-card-hover);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
   }
 
-  /* -----------------------------------------
-     Buttons
-  ----------------------------------------- */
+  .dark .glass-card:hover {
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Project Card */
+  .project-card {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border: 2px solid rgba(0, 0, 0, 0.15);
+    border-radius: 1.5rem;
+    transition: background-color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+  }
+
+  .dark .project-card {
+    background: rgba(255, 255, 255, 0.015);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .project-card:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark .project-card:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Buttons */
   .btn {
     @apply px-6 py-2 rounded-full font-medium;
+    font-family: var(--font-sans);
     border: 1px solid var(--color-border);
     background-color: var(--color-card);
     color: var(--color-foreground);
-    transition:
-      background-color 300ms ease,
-      border-color 300ms ease,
-      color 300ms ease,
-      transform 200ms ease;
+    transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease, transform 200ms ease;
   }
 
   .btn:hover {
@@ -206,14 +217,11 @@
 
   .btn-outline {
     @apply px-8 py-3 rounded-full font-medium;
+    font-family: var(--font-sans);
     border: 2px solid var(--color-foreground);
     background-color: transparent;
     color: var(--color-foreground);
-    transition:
-      background-color 300ms ease,
-      border-color 300ms ease,
-      color 300ms ease,
-      transform 200ms ease;
+    transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease, transform 200ms ease;
   }
 
   .btn-outline:hover {
@@ -226,19 +234,18 @@
     transform: translateY(0);
   }
 
-  /* -----------------------------------------
-     Section Title - Large parallax text
-  ----------------------------------------- */
+  /* Section Title */
   .section-title {
     @apply text-7xl sm:text-8xl lg:text-9xl font-thin lowercase tracking-tighter whitespace-nowrap select-none;
-    color: var(--color-foreground);
-    opacity: 0.15;
+    color: #000000;
     transition: color 300ms ease, opacity 300ms ease;
   }
 
-  /* -----------------------------------------
-     Text Utilities with Theme Support
-  ----------------------------------------- */
+  .dark .section-title {
+    color: #ffffff;
+  }
+
+  /* Text Utilities */
   .text-primary {
     color: var(--color-foreground);
     transition: color 300ms ease;
@@ -254,9 +261,7 @@
     transition: color 300ms ease;
   }
 
-  /* -----------------------------------------
-     Container Utilities
-  ----------------------------------------- */
+  /* Container Utilities */
   .section-container {
     @apply container mx-auto px-4 sm:px-6 lg:px-8;
   }
@@ -270,7 +275,10 @@
    UTILITY LAYER - Helper Classes
 =========================================== */
 @layer utilities {
-  /* Flexbox shortcuts */
+  .font-sans {
+    font-family: var(--font-sans);
+  }
+
   .flex-center {
     @apply flex items-center justify-center;
   }
@@ -279,16 +287,10 @@
     @apply flex flex-col items-center;
   }
 
-  /* Theme transition - Apply to elements that should animate on theme change */
   .theme-transition {
-    transition:
-      background-color 300ms ease,
-      color 300ms ease,
-      border-color 300ms ease,
-      box-shadow 300ms ease;
+    transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
   }
 
-  /* Hide scrollbar but keep functionality */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -298,9 +300,13 @@
     display: none;
   }
 
-  /* Text balance for better line breaks */
   .text-balance {
     text-wrap: balance;
+  }
+
+  .hide-cursor,
+  .hide-cursor * {
+    cursor: none !important;
   }
 }
 
@@ -308,9 +314,7 @@
    ACCESSIBILITY
 =========================================== */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -321,7 +325,6 @@
   }
 }
 
-/* Focus visible styles for keyboard navigation */
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;

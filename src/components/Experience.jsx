@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import GlassSurface from './GlassSurface';
 
 import docereLogo from '../assets/photos/docere.jpeg';
 import maristLogo from '../assets/photos/marist.jpeg';
@@ -192,7 +193,7 @@ const Experience = () => {
                 </p>
 
                 {/* Points */}
-                <ul className="space-y-3 mb-6">
+                <ul className="space-y-3 mb-6 font-sans">
                   {item.points.map((point, i) => (
                     <li key={i} className="flex items-start gap-3">
                       <span className="text-xl mt-[-6px] text-foreground">•</span>

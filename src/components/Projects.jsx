@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -12,12 +12,12 @@ const Projects = () => {
   useEffect(() => {
     gsap.fromTo(
       cardsRef.current,
-      { opacity: 0, y: 100 },
+      { opacity: 0, y: 80 },
       {
         opacity: 1,
         y: 0,
         duration: 1,
-        stagger: 0.2,
+        stagger: 0.15,
         ease: "power3.out",
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -44,9 +44,9 @@ const Projects = () => {
     cardsRef.current.forEach((card, index) => {
       gsap.fromTo(
         card,
-        { y: 50 * (index + 1) },
+        { y: 40 * (index + 1) },
         {
-          y: -50 * (index + 1),
+          y: -40 * (index + 1),
           ease: "none",
           scrollTrigger: {
             trigger: sectionRef.current,
@@ -63,19 +63,42 @@ const Projects = () => {
 
   const projectList = [
     {
-      title: "Docere LMS",
-      desc: "swe intern // lms platform for underprivileged students.",
-      tags: ["React", "Node.js", "Firebase"]
+      title: "legacy louisiana",
+      subtitle: "legal automation // jul – dec 2025",
+      description: [
+        "full-stack app automating trust/will creation for louisiana attorneys",
+        "projected 95% workload reduction — 6 hours to under 30 minutes",
+        "scalable architecture supporting growth from 60 to 1000+ users"
+      ],
+      tags: ["Node.js", "Express", "PostgreSQL", "React"],
+      gif: "/projects/legacy-louisiana.gif",
+      liveUrl: "#",
+      codeUrl: "#"
     },
     {
-      title: "Legal Automation",
-      desc: "automating trust/will document creation for attorneys.",
-      tags: ["Python", "Automation", "LegalTech"]
+      title: "posturize",
+      subtitle: "hackprinceton // nov 2025",
+      description: [
+        "real-time posture analysis system built in under 36 hours",
+        "opencv + mediapipe for vision-based pose detection",
+        "d3.js visualizations for instant user feedback"
+      ],
+      tags: ["React", "Flask", "OpenCV", "MediaPipe"],
+      gif: "/projects/posturize.gif",
+      liveUrl: "#",
+      codeUrl: "#"
     },
     {
-      title: "Headstart Hub",
-      desc: "tech fellowship platform for community growth.",
-      tags: ["GSAP", "Tailwind", "Next.js"]
+      title: "polynomial regression",
+      subtitle: "ml from scratch // dec 2024 – jan 2025",
+      description: [
+        "built regression algorithm predicting housing prices on 5000+ data points",
+        "implemented gradient descent, improving accuracy by 15%",
+        "feature-engineered variables for better model performance"
+      ],
+      tags: ["Python", "NumPy", "Matplotlib"],
+      gif: "/projects/polynomial-regression.gif",
+      codeUrl: "#"
     }
   ];
 
@@ -85,45 +108,93 @@ const Projects = () => {
       id="projects"
       className="min-h-screen py-32 flex flex-col items-center justify-center relative overflow-hidden"
     >
-      {/* Background Parallax Header */}
-      <div className="absolute top-[10%] w-full flex justify-center z-0 pointer-events-none">
+      {/* Background Title */}
+      <div className="absolute top-[5%] w-full flex justify-center z-0 pointer-events-none">
         <h3 ref={backgroundTextRef} className="section-title">
           projects
         </h3>
       </div>
 
-      {/* Project Cards */}
-      <div className="w-full max-w-6xl px-5 z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Cards Container */}
+      <div className="w-full max-w-5xl px-5 z-10 mt-24">
+        <div className="flex flex-col gap-12">
           {projectList.map((project, index) => (
             <div
               key={index}
               ref={el => cardsRef.current[index] = el}
-              className="glass-card p-8 hover:border-accent/50 transition-colors duration-500 group"
+              className="glass-card p-6 md:p-8 flex flex-col md:flex-row gap-6 md:gap-8"
             >
-              {/* Accent Line */}
-              <div className="h-1 w-12 bg-accent rounded-full mb-8 group-hover:w-20 transition-all duration-500" />
+              {/* Left Section - Preview + Buttons */}
+              <div className="md:w-2/5 flex-shrink-0 flex flex-col">
+                {/* Image - 16:9 aspect ratio */}
+                <div className="aspect-video w-full rounded-2xl overflow-hidden border border-border bg-muted">
+                  <img
+                    src={project.gif}
+                    alt={`${project.title} preview`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
 
-              {/* Project Title */}
-              <h4 className="text-3xl font-light lowercase tracking-tight mb-4 text-foreground opacity-90">
-                {project.title}
-              </h4>
+                {/* Action Buttons - Under preview */}
+                <div className="flex gap-3 mt-4">
+                  {project.liveUrl && (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn text-[11px] font-bold uppercase tracking-tighter"
+                    >
+                      live demo
+                    </a>
+                  )}
+                  {project.codeUrl && (
+                    <a
+                      href={project.codeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn text-[11px] font-bold uppercase tracking-tighter"
+                    >
+                      view code
+                    </a>
+                  )}
+                </div>
+              </div>
 
-              {/* Project Description */}
-              <p className="text-sm leading-relaxed mb-8 lowercase text-muted-foreground">
-                {project.desc}
-              </p>
+              {/* Right Section - Content */}
+              <div className="md:w-3/5 flex flex-col">
+                {/* Title */}
+                <h4 className="text-3xl md:text-4xl font-bold mb-2 text-foreground">
+                  {project.title}
+                </h4>
 
-              {/* Tags */}
-              <div className="flex flex-wrap gap-2">
-                {project.tags.map(tag => (
-                  <span
-                    key={tag}
-                    className="text-[10px] uppercase tracking-widest px-3 py-1 rounded-full border border-border text-muted-foreground"
-                  >
-                    {tag}
-                  </span>
-                ))}
+                {/* Subtitle */}
+                <p className="text-sm font-semibold mb-6 uppercase tracking-widest text-muted-foreground">
+                  {project.subtitle}
+                </p>
+
+                {/* Description Points */}
+                <ul className="space-y-3 mb-6 flex-grow font-sans">
+                  {project.description.map((point, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <span className="text-xl mt-[-4px] text-foreground">•</span>
+                      <p className="text-base leading-relaxed font-light lowercase text-muted-foreground">
+                        {point}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.map(tag => (
+                    <span
+                      key={tag}
+                      className="text-[10px] uppercase tracking-widest px-3 py-1 rounded-full border border-border text-muted-foreground"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           ))}

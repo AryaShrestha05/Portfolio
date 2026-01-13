@@ -4,7 +4,7 @@ import './TargetCursor.css';
 
 const TargetCursor = ({
   targetSelector = '.cursor-target',
-  spinDuration = 2,
+  spinDuration = 5,
   hideDefaultCursor = true,
   hoverDuration = 0.2,
   parallaxOn = true,
@@ -31,8 +31,8 @@ const TargetCursor = ({
   }, []);
 
   const constants = useMemo(() => ({
-    borderWidth: 3,
-    cornerSize: 12
+    borderWidth: 2,
+    cornerSize: 10
   }), []);
 
   const moveCursor = useCallback((x, y) => {
