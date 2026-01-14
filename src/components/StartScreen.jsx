@@ -65,13 +65,13 @@ const StartScreen = () => {
       {/* Main name display */}
       <h1
         ref={trigRef}
-        className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-thin whitespace-nowrap text-foreground transition-colors duration-300"
+        className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-thin whitespace-nowrap text-foreground transition-colors duration-300 hero-text"
       >
         Arya Arya Arya Arya Arya Arya Arya Arya Arya Arya
       </h1>
       <h1
         ref={trigRefTwo}
-        className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold whitespace-nowrap text-foreground transition-colors duration-300"
+        className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold whitespace-nowrap text-foreground transition-colors duration-300 hero-text"
       >
         Shrestha Shrestha Shrestha Shrestha Shrestha Shrestha
       </h1>

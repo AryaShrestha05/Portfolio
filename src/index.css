@@ -2,13 +2,9 @@
 
 /* ===========================================
    PORTFOLIO SITE - GLOBAL STYLES
-   ===========================================
    Theme System:
    - Light mode: Black text on white background
    - Dark mode: White text on dark background
-
-   To customize colors, modify the CSS variables below.
-   All components inherit from these variables.
 =========================================== */
 
 @theme {
@@ -34,25 +30,15 @@
   /* Light Mode (Default) */
   :root {
     --font-primary: "Georgia", "Times New Roman", serif;
-
-    /* Core Colors */
     --color-foreground: #000000;
     --color-background: #ffffff;
-
-    /* Muted Colors */
     --color-muted: #f3f4f6;
     --color-muted-foreground: #4b5563;
-
-    /* Border & Card */
     --color-border: rgba(0, 0, 0, 0.12);
     --color-card: rgba(255, 255, 255, 0.6);
     --color-card-foreground: #000000;
-
-    /* Accent */
     --color-accent: #f97316;
     --color-accent-foreground: #ffffff;
-
-    /* Shadows */
     --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.662);
     --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.12);
   }
@@ -72,7 +58,6 @@
     --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.7);
   }
 
-  /* Global Defaults */
   html {
     scroll-behavior: smooth;
   }
@@ -91,7 +76,6 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Typography */
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-primary);
     color: var(--color-foreground);
@@ -117,16 +101,17 @@
     color: var(--color-background);
   }
 }
+
 @layer utilities {
   .no-scroll {
-    /* Freeze everything in place */
     position: fixed !important;
     width: 100% !important;
-    overflow-y: scroll !important; /* Forces the scrollbar track to stay visible */
+    overflow-y: scroll !important;
     touch-action: none;
     -webkit-overflow-scrolling: none;
   }
 }
+
 /* ===========================================
    COMPONENT LAYER - Reusable Components
 =========================================== */
@@ -148,17 +133,15 @@
     }
   }
 
-  /* Start Screen */
   #start-screen {
     @apply relative z-10 min-h-screen w-full;
   }
 
-  /* Glass Card */
   .glass-card {
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(40px);
     -webkit-backdrop-filter: blur(40px);
-    border: 2px solid #000000;
+    border: 1px solid var(--color-muted-foreground);
     border-radius: 3rem;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
     transition: background-color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
@@ -166,22 +149,21 @@
 
   .dark .glass-card {
     background: rgba(255, 255, 255, 0.02);
-    border: 2px solid #ffffff;
+    border: 1px solid var(--color-muted-foreground);
   }
 
   .glass-card:hover {
     background: rgba(255, 255, 255, 0.05);
-    border-color: #000000;
+    border-color: var(--color-foreground);
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
   }
 
   .dark .glass-card:hover {
     background: rgba(255, 255, 255, 0.04);
-    border-color: #ffffff;
+    border-color: var(--color-foreground);
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
   }
 
-  /* Project Card */
   .project-card {
     background: rgba(255, 255, 255, 0.02);
     backdrop-filter: blur(40px);
@@ -208,7 +190,6 @@
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
   }
 
-  /* Buttons */
   .btn {
     @apply px-6 py-2 rounded-full font-medium;
     font-family: var(--font-sans);
@@ -223,10 +204,6 @@
     transform: translateY(-1px);
   }
 
-  .btn:active {
-    transform: translateY(0);
-  }
-
   .btn-outline {
     @apply px-8 py-3 rounded-full font-medium;
     font-family: var(--font-sans);
@@ -236,68 +213,36 @@
     transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease, transform 200ms ease;
   }
 
-  .btn-outline:hover {
-    background-color: var(--color-foreground);
-    color: var(--color-background);
-    transform: translateY(-2px);
-  }
-
-  .btn-outline:active {
-    transform: translateY(0);
-  }
-
-  /* Section Title */
+  /* --- OPTIMIZED GLOW SECTION (Fixed Performance) --- */
   .section-title {
     @apply text-7xl sm:text-8xl lg:text-9xl font-thin lowercase tracking-tighter whitespace-nowrap select-none;
-    color: #000000;
-    transition: color 300ms ease, opacity 300ms ease;
+    color: var(--color-foreground);
+    transition: color 300ms ease, filter 300ms ease;
+    
+    /* Hardware acceleration */
+    will-change: filter;
+    
+    /* Performance fix: Use drop-shadow filter instead of multi-layered text-shadow */
+    filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.2));
+    
+    -webkit-text-stroke: 1px var(--color-muted-foreground);
+    paint-order: stroke fill;
   }
 
   .dark .section-title {
-    color: #ffffff;
-  }
-
-  /* Text Utilities */
-  .text-primary {
     color: var(--color-foreground);
-    transition: color 300ms ease;
-  }
-
-  .text-secondary {
-    color: var(--color-muted-foreground);
-    transition: color 300ms ease;
-  }
-
-  .text-accent {
-    color: var(--color-accent);
-    transition: color 300ms ease;
-  }
-
-  /* Container Utilities */
-  .section-container {
-    @apply container mx-auto px-4 sm:px-6 lg:px-8;
-  }
-
-  .content-container {
-    @apply max-w-6xl mx-auto;
+    -webkit-text-stroke: none;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
   }
 }
 
 /* ===========================================
-   UTILITY LAYER - Helper Classes
+   UTILITY LAYER
 =========================================== */
 @layer utilities {
-  .font-sans {
-    font-family: var(--font-sans);
-  }
-
-  .flex-center {
-    @apply flex items-center justify-center;
-  }
-
-  .col-center {
-    @apply flex flex-col items-center;
-  }
+  .font-sans { font-family: var(--font-sans); }
+  .flex-center { @apply flex items-center justify-center; }
+  .col-center { @apply flex flex-col items-center; }
 
   .theme-transition {
     transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
@@ -306,35 +251,32 @@
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
   }
 
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+  .text-balance { text-wrap: balance; }
+  .hide-cursor, .hide-cursor * { cursor: none !important; }
+
+  /* Optimized Hero Text */
+  .hero-text {
+    will-change: filter;
+    -webkit-text-stroke: 1px var(--color-muted-foreground);
+    paint-order: stroke fill;
+    filter: drop-shadow(0 0 15px rgba(0, 0, 0, 0.2));
   }
 
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  .hide-cursor,
-  .hide-cursor * {
-    cursor: none !important;
+  .dark .hero-text {
+    -webkit-text-stroke: none;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
   }
 }
 
-/* ===========================================
-   ACCESSIBILITY
-=========================================== */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-
-  html {
-    scroll-behavior: auto;
-  }
+  html { scroll-behavior: auto; }
 }
 
 :focus-visible {

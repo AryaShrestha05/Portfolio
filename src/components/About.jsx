@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import GlassSurface from './GlassSurface';
 import headshot from '../assets/photos/Arya_S_Headshot.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -14,6 +13,7 @@ const About = () => {
   const imageCardRef = useRef();
 
   useEffect(() => {
+    // Initial Fade In
     gsap.fromTo(
       [aboutTextRef.current, meTextRef.current, cardRef.current, imageCardRef.current],
       { opacity: 0 },
@@ -48,23 +48,35 @@ const About = () => {
     <section
       ref={sectionRef}
       id="about"
-      className="min-h-screen py-20 flex flex-col items-center justify-center overflow-hidden"
+      className="min-h-screen py-10 flex flex-col items-center justify-start overflow-hidden"
     >
       {/* Parallax Headers */}
-      <div className="flex flex-col items-center mb-16 select-none pointer-events-none">
-        <h3 ref={aboutTextRef} className="section-title">
+      <div className="flex flex-col items-center pt-[30vh] mb-12 select-none pointer-events-none">
+        <h3 
+          ref={aboutTextRef} 
+          className="section-title"
+          style={{ translateZ: 0 }}
+        >
           about
         </h3>
-        <h3 ref={meTextRef} className="section-title">
+        <h3 
+          ref={meTextRef} 
+          className="section-title"
+          style={{ translateZ: 0 }}
+        >
           me
         </h3>
       </div>
 
-      {/* Content Container */}
-      <div className="w-full max-w-6xl px-5">
+      {/* Content Container - Adjusted to the "Sweet Spot" mt-8 */}
+      <div className="w-full max-w-6xl px-5 mt-6">
         <div className="flex flex-col md:flex-row gap-8 items-start">
           {/* Left: Info Card */}
-          <div ref={cardRef} className="flex-1 glass-card p-10 z-10">
+          <div 
+            ref={cardRef} 
+            className="flex-1 glass-card p-10 z-10"
+            style={{ translateZ: 0 }}
+          >
             <p className="text-2xl font-semibold mb-6 lowercase text-foreground">
               i'm arya, but i'm also:
             </p>
@@ -89,7 +101,11 @@ const About = () => {
           </div>
 
           {/* Right: Image Card */}
-          <div ref={imageCardRef} className="flex-shrink-0 glass-card p-4 z-10">
+          <div 
+            ref={imageCardRef} 
+            className="flex-shrink-0 glass-card p-4 z-10"
+            style={{ translateZ: 0 }}
+          >
             <img
               src={headshot}
               alt="Arya Shrestha"

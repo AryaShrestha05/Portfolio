@@ -62,7 +62,7 @@ const Particles = ({ isDarkMode }) => {
   const { positions, sizes } = useMemo(() => {
     const pos = new Float32Array(count * 3);
     const sizeArr = new Float32Array(count);
-    const minRadius = 0.7; // Hollow center - particles start from this radius
+    const minRadius = 1.2; // Hollow center - particles start from this radius
     const maxRadius = 2.5;
 
     for (let i = 0; i < count; i++) {
@@ -81,15 +81,16 @@ const Particles = ({ isDarkMode }) => {
     return { positions: pos, sizes: sizeArr };
   }, []);
 
-  // Lighter blue for dark mode, light gray for light mode
+  // Match theme: muted-foreground colors for subtle contrast
+  // Dark mode: #a3a3a3 (muted gray), Light mode: #4b5563 (muted slate)
   const uniforms = useRef({
-    uColor: { value: new THREE.Color(isDarkMode ? 0x6bb3ff : 0xb0b0b0) }
+    uColor: { value: new THREE.Color(isDarkMode ? 0xa3a3a3 : 0x4b5563) }
   });
 
   // Update color when mode changes
   useEffect(() => {
     if (materialRef.current) {
-      materialRef.current.uniforms.uColor.value.set(isDarkMode ? 0x6bb3ff : 0xb0b0b0);
+      materialRef.current.uniforms.uColor.value.set(isDarkMode ? 0xa3a3a3 : 0x4b5563);
     }
   }, [isDarkMode]);
 
