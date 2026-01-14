@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import headshot from '../assets/photos/Arya_S_Headshot.jpg';
@@ -39,8 +39,8 @@ const About = () => {
     parallaxTl
       .fromTo(aboutTextRef.current, { x: 150 }, { x: -150, ease: "none" }, 0)
       .fromTo(meTextRef.current, { x: -150 }, { x: 150, ease: "none" }, 0)
-      .fromTo(cardRef.current, { y: 100 }, { y: -100, ease: "none" }, 0)
-      .fromTo(imageCardRef.current, { y: 200 }, { y: -200, ease: "none" }, 0);
+      .fromTo(cardRef.current, { y: 40 }, { y: -40, ease: "none" }, 0)
+      .fromTo(imageCardRef.current, { y: 80 }, { y: -80, ease: "none" }, 0);
 
   }, []);
 
@@ -48,34 +48,32 @@ const About = () => {
     <section
       ref={sectionRef}
       id="about"
-      className="min-h-screen py-10 flex flex-col items-center justify-start overflow-hidden"
+      className="min-h-screen py-20 flex flex-col items-center justify-end overflow-hidden relative"
     >
-      {/* Parallax Headers */}
-      <div className="flex flex-col items-center pt-[30vh] mb-12 select-none pointer-events-none">
+      {/* Parallax Headers - Positioned higher up at 10% */}
+      <div className="absolute top-[10%] flex flex-col items-center select-none pointer-events-none z-0">
         <h3 
           ref={aboutTextRef} 
-          className="section-title"
-          style={{ translateZ: 0 }}
+          className="section-title !leading-[0.7]"
         >
           about
         </h3>
         <h3 
           ref={meTextRef} 
-          className="section-title"
-          style={{ translateZ: 0 }}
+          className="section-title !leading-[0.9]"
         >
           me
         </h3>
       </div>
 
-      {/* Content Container - Adjusted to the "Sweet Spot" mt-8 */}
-      <div className="w-full max-w-6xl px-5 mt-6">
-        <div className="flex flex-col md:flex-row gap-8 items-start">
+      {/* Content Container - Pushed to the bottom half with pb-32 */}
+      <div className="w-full max-w-6xl px-5 z-10 pb-15">
+        <div className="flex flex-col md:flex-row gap-8 items-center md:items-end justify-center">
+          
           {/* Left: Info Card */}
           <div 
             ref={cardRef} 
-            className="flex-1 glass-card p-10 z-10"
-            style={{ translateZ: 0 }}
+            className="flex-1 glass-card p-8 md:p-10"
           >
             <p className="text-2xl font-semibold mb-6 lowercase text-foreground">
               i'm arya, but i'm also:
@@ -86,7 +84,7 @@ const About = () => {
                 studying <span className="text-foreground font-medium">computer science</span> @ marist university, poughkeepsie ny.
               </li>
               <li>
-                previous swe intern @ <span className="text-foreground font-medium">docere</span>, a lms platform educating underprivileged students in minnesota.
+                previous swe intern @ <span className="text-foreground font-medium">docere</span>, a startup educating underprivileged students in minnesota.
               </li>
               <li>
                 working with louisiana attorneys to <span className="text-foreground font-medium">automate trust/will document creation</span>.
@@ -103,13 +101,12 @@ const About = () => {
           {/* Right: Image Card */}
           <div 
             ref={imageCardRef} 
-            className="flex-shrink-0 glass-card p-4 z-10"
-            style={{ translateZ: 0 }}
+            className="flex-shrink-0 glass-card p-4"
           >
             <img
               src={headshot}
               alt="Arya Shrestha"
-              className="w-64 h-80 object-cover rounded-3xl"
+              className="w-56 h-72 object-cover rounded-2xl"
             />
           </div>
         </div>

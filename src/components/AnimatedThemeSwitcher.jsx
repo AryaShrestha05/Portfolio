@@ -110,7 +110,7 @@ const AnimatedThemeSwitcher = () => {
       >
         {/* Sun icon */}
         <Sun
-          className={`absolute w-5 h-5 text-amber-500 transition-all duration-500 ${
+          className={`absolute w-5 h-5 text-foreground transition-all duration-500 ${
             theme === 'dark'
               ? 'opacity-0 rotate-90 scale-0'
               : 'opacity-100 rotate-0 scale-100'
@@ -119,7 +119,7 @@ const AnimatedThemeSwitcher = () => {
 
         {/* Moon icon */}
         <Moon
-          className={`absolute w-5 h-5 text-blue-400 transition-all duration-500 ${
+          className={`absolute w-5 h-5 text-foreground transition-all duration-500 ${
             theme === 'light'
               ? 'opacity-0 -rotate-90 scale-0'
               : 'opacity-100 rotate-0 scale-100'

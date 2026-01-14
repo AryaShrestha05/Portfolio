@@ -53,7 +53,7 @@ const RotatingScene = ({ children, mousePos }) => {
 };
 
 // Particle system
-const Particles = ({ isDarkMode }) => {
+const Particles = ({ isDarkMode, customColor }) => {
   const meshRef = useRef();
   const materialRef = useRef();
   const count = 5000;
@@ -84,15 +84,19 @@ const Particles = ({ isDarkMode }) => {
   // Match theme: muted-foreground colors for subtle contrast
   // Dark mode: #a3a3a3 (muted gray), Light mode: #4b5563 (muted slate)
   const uniforms = useRef({
-    uColor: { value: new THREE.Color(isDarkMode ? 0xa3a3a3 : 0x4b5563) }
+    uColor: { value: new THREE.Color(isDarkMode ? 0xa3a3a3 : 0xd1d5db) }
   });
 
-  // Update color when mode changes
+  // Update color when mode or custom color changes
   useEffect(() => {
     if (materialRef.current) {
-      materialRef.current.uniforms.uColor.value.set(isDarkMode ? 0xa3a3a3 : 0x4b5563);
+      if (customColor) {
+        materialRef.current.uniforms.uColor.value.set(customColor);
+      } else {
+        materialRef.current.uniforms.uColor.value.set(isDarkMode ? 0xa3a3a3 : 0xd1d5db);
+      }
     }
-  }, [isDarkMode]);
+  }, [isDarkMode, customColor]);
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -130,7 +134,7 @@ const Particles = ({ isDarkMode }) => {
   );
 };
 
-const FboAnimation = () => {
+const FboAnimation = ({ customColor }) => {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const mousePos = useRef({ x: 0, y: 0 });
 
@@ -161,7 +165,7 @@ const FboAnimation = () => {
         style={{ background: "transparent" }}
       >
         <RotatingScene mousePos={mousePos}>
-          <Particles isDarkMode={isDarkMode} />
+          <Particles isDarkMode={isDarkMode} customColor={customColor} />
         </RotatingScene>
       </Canvas>
     </div>

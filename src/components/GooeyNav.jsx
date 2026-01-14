@@ -9,6 +9,7 @@ const GooeyNav = ({
     { label: 'about', href: '#about' },
     { label: 'experience', href: '#experience' },
     { label: 'projects', href: '#projects' },
+    { label: 'beyond', href: '#beyond' },
     { label: 'contact', href: '#contacts' }
   ],
   animationTime = 600,
@@ -139,6 +140,7 @@ const GooeyNav = ({
     }
   };
 
+  // Update effect position when activeIndex changes
   useEffect(() => {
     if (!navRef.current || !containerRef.current) return;
     const activeLi = navRef.current.querySelectorAll('li')[activeIndex];
@@ -157,6 +159,40 @@ const GooeyNav = ({
     resizeObserver.observe(containerRef.current);
     return () => resizeObserver.disconnect();
   }, [activeIndex]);
+
+  // Track scroll position to update active section
+  useEffect(() => {
+    const sectionIds = items.map(item => item.href.substring(1));
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '-40% 0px -40% 0px',
+      threshold: 0
+    };
+
+    const observerCallback = (entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const sectionId = entry.target.id;
+          const newIndex = sectionIds.indexOf(sectionId);
+          if (newIndex !== -1 && newIndex !== activeIndex) {
+            setActiveIndex(newIndex);
+          }
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    sectionIds.forEach(id => {
+      const section = document.getElementById(id);
+      if (section) {
+        observer.observe(section);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, [items, activeIndex]);
 
   return (
     <GlassSurface

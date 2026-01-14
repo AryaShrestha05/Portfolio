@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import GlassSurface from './GlassSurface';
@@ -115,12 +115,13 @@ const Experience = () => {
       role: 'tech fellow',
       company: 'headstart fellowship',
       logo: headstartLogo,
-      period: 'july 2025 – dec 2025',
+      period: 'spring 2026 cohort',
       points: [
-        'collaborated on community tech growth',
-        'participated in technical leadership tracks',
-        'engaged in agile-driven sprint cycles'
-      ]
+        'mentorship from industry professionals',
+        'f500 recruiting connections',
+        'career development workshops'
+      ],
+      link: 'https://www.headstartfellowship.com/'
     },
     {
       role: 'phase 2 fellow',
@@ -128,21 +129,23 @@ const Experience = () => {
       logo: propelLogo,
       period: '2025',
       points: [
-        'advanced to specialized fellowship phase',
-        'mastered full-stack architecture patterns',
-        'built scalable project deployments'
-      ]
+        'direct phase 2 admission (~1% acceptance)',
+        '1:1 mentorship for target company prep',
+        'interview and resume coaching'
+      ],
+      link: 'https://www.propel2excel.com/'
     },
     {
-      role: 'colorstack fellow',
+      role: 'member',
       company: 'colorstack',
       logo: colorstackLogo,
       period: '2025',
       points: [
-        'engaged in black/latinx tech community',
-        'utilized career development resources',
-        'participated in technical workshops'
-      ]
+        'tech community for underrepresented students',
+        'recruiting and networking events',
+        'peer support and resources'
+      ],
+      link: 'https://www.colorstack.org/'
     },
   ];
 
@@ -157,7 +160,7 @@ const Experience = () => {
         </div>
 
         {/* Cards Slider */}
-        <div className="w-full flex items-center relative z-10 mt-[10vh]">
+        <div className="w-full flex items-center relative z-10 mt-[12vh] ">
           <div
             ref={sliderRef}
             className="flex items-center"
@@ -171,10 +174,10 @@ const Experience = () => {
               <div
                 key={index}
                 ref={el => cardsRef.current[index] = el}
-                className="flex-shrink-0 w-[350px] md:w-[400px] h-[420px] glass-card p-10 flex flex-col shadow-xl rounded-3xl"
+                className="flex-shrink-0 w-[350px] md:w-[400px] h-[420px] glass-card p-10 flex flex-col shadow-xl"
               >
                 {/* Logo Section */}
-                <div className="w-16 h-16 mb-6 flex items-center justify-center overflow-hidden rounded-xl border border-border bg-card">
+                <div className="w-16 h-16 mb-6 flex items-center justify-center overflow-hidden rounded-2xl border border-border bg-card">
                   <img
                     src={item.logo}
                     alt={item.company}
@@ -206,12 +209,20 @@ const Experience = () => {
 
                 {/* Action Buttons */}
                 <div className="flex gap-3 mt-auto">
-                  <button className="btn text-[11px] font-bold uppercase tracking-tighter">
-                    my team
-                  </button>
-                  <button className="btn text-[11px] font-bold uppercase tracking-tighter">
-                    my project
-                  </button>
+                  {item.link ? (
+                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="btn cursor-target text-[11px] font-bold uppercase tracking-tighter">
+                      website
+                    </a>
+                  ) : (
+                    <>
+                      <button className="btn cursor-target text-[11px] font-bold uppercase tracking-tighter">
+                        my team
+                      </button>
+                      <button className="btn cursor-target text-[11px] font-bold uppercase tracking-tighter">
+                        my project
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             ))}

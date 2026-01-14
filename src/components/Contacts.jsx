@@ -1,140 +1,174 @@
-import { useRef, useState, useEffect } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { TypeAnimation } from 'react-type-animation';
-import { FaEnvelope, FaLinkedin, FaGithub, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { FaEnvelope, FaLinkedin, FaGithub, FaInstagram } from 'react-icons/fa';
+import { SiDevpost } from 'react-icons/si';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Contacts = () => {
-  const ref = useRef(null);
-  const [startTyping, setStartTyping] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const inView = useInView(ref, { once: true, margin: "-30% 0px -30% 0px" });
-
-  useEffect(() => {
-    if (inView) {
-      setStartTyping(true);
-    }
-  }, [inView]);
-
-  // Track dark mode
-  useEffect(() => {
-    const checkDarkMode = () => setIsDarkMode(document.documentElement.classList.contains('dark'));
-    checkDarkMode();
-    const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
-  }, []);
-
-  const iconVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
-
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
-  };
+  const sectionRef = useRef();
+  const letsRef = useRef();
+  const connectRef = useRef();
+  const linksRef = useRef([]);
+  const footerRef = useRef();
 
   const socialLinks = [
     { icon: FaEnvelope, href: 'mailto:your.email@example.com', label: 'Email' },
     { icon: FaLinkedin, href: 'https://linkedin.com/in/yourprofile', label: 'LinkedIn' },
     { icon: FaGithub, href: 'https://github.com/yourprofile', label: 'GitHub' },
     { icon: FaInstagram, href: 'https://instagram.com/yourprofile', label: 'Instagram' },
-    { icon: FaTwitter, href: 'https://twitter.com/yourprofile', label: 'Twitter' },
+    { icon: SiDevpost, href: 'https://devpost.com/yourprofile', label: 'Devpost' },
   ];
+
+  useEffect(() => {
+    // Title entrance animation
+    gsap.fromTo(
+      [letsRef.current, connectRef.current],
+      { opacity: 0 },
+      {
+        opacity: 1,
+        duration: 1,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+        }
+      }
+    );
+
+    // Parallax timeline for split title animation
+    const parallaxTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 1,
+      },
+    });
+
+    parallaxTl
+      .fromTo(letsRef.current, { x: 150 }, { x: -150, ease: "none" }, 0)
+      .fromTo(connectRef.current, { x: -150 }, { x: 150, ease: "none" }, 0);
+
+    // Links animation - each icon comes from a different direction
+    const directions = [
+      { x: -60, y: -40 },   // Email - from top-left
+      { x: 0, y: -60 },     // LinkedIn - from top
+      { x: 0, y: 60 },      // GitHub - from bottom
+      { x: 60, y: -40 },    // Instagram - from top-right
+      { x: 80, y: 0 },      // Devpost - from right
+    ];
+
+    linksRef.current.forEach((link, i) => {
+      if (!link) return;
+
+      // Set initial state immediately
+      gsap.set(link, {
+        opacity: 0,
+        x: directions[i].x,
+        y: directions[i].y,
+        scale: 0.6,
+        rotation: (i % 2 === 0) ? -10 : 10
+      });
+
+      // Entrance animation
+      gsap.to(link, {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        scale: 1,
+        rotation: 0,
+        duration: 1,
+        delay: i * 0.08,
+        ease: "back.out(1.7)",
+        force3D: true,
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 55%",
+        }
+      });
+
+      // Continuous scroll-linked floating animation
+      const floatDirection = i % 2 === 0 ? 1 : -1;
+      const floatAmount = 15 + (i * 5); // Each button floats differently
+
+      gsap.to(link, {
+        y: floatDirection * floatAmount,
+        rotation: floatDirection * 3,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top center",
+          end: "bottom top",
+          scrub: 1.5,
+        }
+      });
+    });
+
+    // Footer animation
+    gsap.fromTo(
+      footerRef.current,
+      { opacity: 0, y: 20 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 40%",
+        }
+      }
+    );
+
+    return () => ScrollTrigger.getAll().forEach(t => t.kill());
+  }, []);
 
   return (
     <section
+      ref={sectionRef}
       id="contacts"
-      ref={ref}
-      className="relative min-h-screen w-full flex items-center justify-center py-24 px-8"
+      className="min-h-screen py-32 flex flex-col items-center relative overflow-hidden"
     >
-      <motion.div
-        className="w-full max-w-4xl flex flex-col items-center justify-center text-center"
-        initial="hidden"
-        animate={inView ? "visible" : "hidden"}
-        variants={{
-          hidden: { opacity: 0 },
-          visible: { opacity: 1, transition: { duration: 1 } },
-        }}
-      >
-        {/* Animated Title */}
-        <div className="h-16 md:h-20 mb-8">
-          {startTyping ? (
-            <TypeAnimation
-              sequence={[
-                'get in touch...',
-                2000,
-                'reach out...',
-                2000,
-                'say hello...',
-                2000,
-                "let's connect...",
-                2000,
-              ]}
-              wrapper="h2"
-              cursor={true}
-              repeat={Infinity}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground"
-              style={{ fontFamily: 'var(--font-primary)' }}
-            />
-          ) : (
-            <h2
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-transparent"
-              style={{ fontFamily: 'var(--font-primary)' }}
-            >
-              get in touch...
-            </h2>
-          )}
-        </div>
+      {/* Split Title with parallax */}
+      <div className="w-full flex flex-col items-center mb-20 select-none pointer-events-none">
+        <h2 ref={letsRef} className="section-title !leading-[0.9]">
+          let's
+        </h2>
+        <h2 ref={connectRef} className="section-title mt-1 !leading-[0.9]">
+          connect!
+        </h2>
+      </div>
 
-        {/* Subtitle */}
-        <motion.p
-          className="text-lg md:text-xl mb-12 max-w-2xl text-muted-foreground font-sans"
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-        >
-          i love connecting with fellow developers, creators, and curious minds!
-        </motion.p>
-
-        {/* Social Icons */}
-        <motion.div
-          className="flex items-center justify-center flex-wrap gap-x-10 gap-y-6"
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-        >
-          {socialLinks.map((social, index) => (
-            <motion.a
-              key={index}
+      {/* Social Icons */}
+      <div className="z-10 flex items-center justify-center flex-wrap gap-6 md:gap-10">
+        {socialLinks.map((social, i) => (
+          <div
+            key={i}
+            ref={el => linksRef.current[i] = el}
+          >
+            <a
               href={social.href}
               target={social.href.startsWith('mailto') ? undefined : '_blank'}
               rel={social.href.startsWith('mailto') ? undefined : 'noopener noreferrer'}
-              className="text-foreground hover:text-muted-foreground transition-colors duration-300 cursor-target"
-              variants={iconVariants}
-              whileHover={{ scale: 1.1, y: -2 }}
-              whileTap={{ scale: 0.95 }}
+              className="cursor-target block p-4 rounded-full border border-border bg-card/50 hover:bg-card hover:border-foreground transition-colors duration-300"
               aria-label={social.label}
             >
-              <social.icon size={36} />
-            </motion.a>
-          ))}
-        </motion.div>
+              <social.icon
+                size={28}
+                className="text-foreground"
+              />
+            </a>
+          </div>
+        ))}
+      </div>
 
-        {/* Footer text */}
-        <motion.p
-          className="mt-20 text-sm text-muted-foreground font-sans"
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ delay: 0.8, duration: 0.6 }}
-        >
-          built with care by arya shrestha
-        </motion.p>
-      </motion.div>
+      {/* Footer */}
+      <div ref={footerRef} className="mt-24 text-center">
+        <p className="text-sm font-sans lowercase tracking-wide footer-glow">
+          built with love, by arya shrestha
+        </p>
+      </div>
     </section>
   );
 };

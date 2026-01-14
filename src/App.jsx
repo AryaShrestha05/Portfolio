@@ -9,11 +9,13 @@ import {
   Beyond,
   Contacts,
   FboAnimation,
-  Preloader
+  Preloader,
+  StarColorPicker
 } from "./components";
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [starColor, setStarColor] = useState(null);
 
   return (
     <div
@@ -42,20 +44,24 @@ function App() {
         className="fixed inset-0 z-0 bg-background transition-colors duration-300"
         style={{ backgroundColor: 'var(--color-background, #ffffff)' }}
       >
-        <FboAnimation />
+        <FboAnimation customColor={starColor} />
       </div>
 
-      {/* 5. UI Layer */}
+      {/* 5. Star Color Picker */}
+      {!loading && <StarColorPicker onColorChange={setStarColor} />}
+
+      {/* 6. UI Layer */}
       <div className={`relative z-10 transition-opacity duration-1000 ${loading ? 'opacity-0' : 'opacity-100'}`}>
         <div className="fixed top-0 left-0 w-full z-50 flex justify-center pt-6 pointer-events-none">
           <div className="pointer-events-auto">
             <GooeyNav
               items={[
-                { label: 'Home', href: '#start-screen' },
-                { label: 'About', href: '#about' },
-                { label: 'Experience', href: '#experience' },
-                { label: 'Projects', href: '#projects' },
-                { label: 'Contact', href: '#contacts' }
+                { label: 'home', href: '#start-screen' },
+                { label: 'about', href: '#about' },
+                { label: 'experience', href: '#experience' },
+                { label: 'projects', href: '#projects' },
+                { label: 'beyond', href: '#beyond' },
+                { label: 'contact', href: '#contacts' }
               ]}
             />
           </div>

@@ -92,7 +92,7 @@ const ResumeModal = ({ isOpen, onClose }) => {
     >
       <div
         ref={modalRef}
-        className="relative w-full max-w-5xl h-[calc(100vh-180px)] flex flex-col glass-card overflow-hidden border-2 border-border/80 bg-card text-card-foreground shadow-2xl"
+        className="relative w-full max-w-5xl h-[calc(100vh-180px)] flex flex-col glass-card overflow-hidden bg-card text-card-foreground shadow-2xl"
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 md:px-8 border-b border-border/80">
@@ -130,7 +130,7 @@ const ResumeModal = ({ isOpen, onClose }) => {
 
         {/* PDF Viewer - Explicitly White */}
         <div className="flex-1 p-3 md:p-6 bg-muted/10">
-          <div className="w-full h-full rounded-xl overflow-hidden border border-border shadow-inner bg-white">
+          <div className="w-full h-full rounded-2xl overflow-hidden border border-border shadow-inner bg-white">
             <iframe
               src={`${resumePdf}#toolbar=0&navpanes=0`}
               title="Resume"
