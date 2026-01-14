@@ -14,6 +14,17 @@
 @theme {
   --font-primary: "Georgia", "Times New Roman", serif;
   --font-sans: "Satoshi", "Inter", system-ui, sans-serif;
+
+  /* Define Tailwind color tokens with light mode defaults */
+  --color-background: #ffffff;
+  --color-foreground: #000000;
+  --color-muted: #f3f4f6;
+  --color-muted-foreground: #4b5563;
+  --color-border: rgba(0, 0, 0, 0.12);
+  --color-card: rgba(255, 255, 255, 0.6);
+  --color-card-foreground: #000000;
+  --color-accent: #f97316;
+  --color-accent-foreground: #ffffff;
 }
 
 /* ===========================================
@@ -147,7 +158,7 @@
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(40px);
     -webkit-backdrop-filter: blur(40px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 2px solid #000000;
     border-radius: 3rem;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
     transition: background-color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
@@ -155,17 +166,18 @@
 
   .dark .glass-card {
     background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 2px solid #ffffff;
   }
 
   .glass-card:hover {
     background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.12);
+    border-color: #000000;
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
   }
 
   .dark .glass-card:hover {
     background: rgba(255, 255, 255, 0.04);
+    border-color: #ffffff;
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
   }
 

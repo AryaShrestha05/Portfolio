@@ -16,7 +16,10 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   return (
-    <div className={`relative min-h-screen bg-background text-foreground transition-colors duration-300 ${loading ? 'cursor-none' : ''}`}>
+    <div
+      className={`relative min-h-screen bg-background text-foreground transition-colors duration-300 ${loading ? 'cursor-none' : ''}`}
+      style={{ backgroundColor: 'var(--color-background, #ffffff)' }}
+    >
       {/* 1. Hidden SVG Filter for Gooey Effects */}
       <svg className="hidden">
         <defs>
@@ -35,7 +38,10 @@ function App() {
       {!loading && <TargetCursor />}
 
       {/* 4. Background Layer */}
-      <div className="fixed inset-0 z-0 bg-background transition-colors duration-300">
+      <div
+        className="fixed inset-0 z-0 bg-background transition-colors duration-300"
+        style={{ backgroundColor: 'var(--color-background, #ffffff)' }}
+      >
         <FboAnimation />
       </div>
 

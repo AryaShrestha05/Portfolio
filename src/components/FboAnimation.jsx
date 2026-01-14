@@ -1,23 +1,49 @@
-import { Canvas, useFrame, extend, createPortal } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-import { useMemo, useRef, useState, useEffect } from "react";
+import React, { useRef, useMemo, useState, useEffect } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-import { SimulationMaterial, renderVertexShader, renderFragmentShader } from "./FboShaders";
+// Vertex shader for round star-like particles
+const vertexShader = `
+  attribute float size;
+  varying float vOpacity;
 
-// Extend R3F to recognize SimulationMaterial
-extend({ SimulationMaterial });
+  void main() {
+    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+    gl_Position = projectionMatrix * mvPosition;
+    gl_PointSize = size * (300.0 / -mvPosition.z);
+    vOpacity = 0.6 + 0.4 * (size / 0.08);
+  }
+`;
 
-// This component creates a group that rotates to follow the mouse
-const RotatingScene = ({ children }) => {
+// Fragment shader for round star-like particles with soft glow
+const fragmentShader = `
+  uniform vec3 uColor;
+  varying float vOpacity;
+
+  void main() {
+    vec2 center = gl_PointCoord - vec2(0.5);
+    float dist = length(center);
+
+    // Discard pixels outside the circle
+    if (dist > 0.5) discard;
+
+    // Soft circular falloff for star-like glow
+    float alpha = 1.0 - smoothstep(0.0, 0.5, dist);
+    alpha *= vOpacity;
+
+    gl_FragColor = vec4(uColor, alpha);
+  }
+`;
+
+// Group that rotates to follow the mouse
+const RotatingScene = ({ children, mousePos }) => {
   const groupRef = useRef();
 
-  useFrame((state) => {
-    const { pointer } = state;
-    // Rotate the group based on mouse position
-    const targetRotationX = pointer.y * 1.8;
-    const targetRotationY = -pointer.x * 1.8;
+  useFrame(() => {
     if (groupRef.current) {
+      // Rotate the group based on mouse position
+      const targetRotationX = mousePos.current.y * 0.5;
+      const targetRotationY = -mousePos.current.x * 0.5;
       groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetRotationX, 0.05);
       groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, targetRotationY, 0.05);
     }
@@ -26,170 +52,116 @@ const RotatingScene = ({ children }) => {
   return <group ref={groupRef}>{children}</group>;
 };
 
-const FBOParticles = () => {
-  const size = 138;
+// Particle system
+const Particles = ({ isDarkMode }) => {
+  const meshRef = useRef();
+  const materialRef = useRef();
+  const count = 5000;
 
-  const points = useRef();
-  const simulationMaterialRef = useRef();
-  const prevPointer = useRef(new THREE.Vector2());
-  const firstFrame = useRef(true);
+  // Generate random positions in a sphere with hollow center
+  const { positions, sizes } = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    const sizeArr = new Float32Array(count);
+    const minRadius = 0.7; // Hollow center - particles start from this radius
+    const maxRadius = 2.5;
 
-  const scene = useMemo(() => new THREE.Scene(), []);
-  const camera = useMemo(() => new THREE.OrthographicCamera(-1, 1, 1, -1, 1 / Math.pow(2, 53), 1), []);
-  
-  const positions = useMemo(() => new Float32Array([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0]), []);
-  const uvs = useMemo(() => new Float32Array([0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0]), []);
+    for (let i = 0; i < count; i++) {
+      // Distribute radius from minRadius to maxRadius (hollow center)
+      const radius = minRadius + Math.random() * (maxRadius - minRadius);
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
 
-  const [renderTargetA, renderTargetB] = useMemo(() => {
-    const opts = {
-      minFilter: THREE.NearestFilter,
-      magFilter: THREE.NearestFilter,
-      format: THREE.RGBAFormat,
-      stencilBuffer: false,
-      type: THREE.FloatType,
-    };
-    return [new THREE.WebGLRenderTarget(size, size, opts), new THREE.WebGLRenderTarget(size, size, opts)];
-  }, [size]);
+      pos[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+      pos[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+      pos[i * 3 + 2] = radius * Math.cos(phi);
 
-  const targets = useRef({ read: renderTargetA, write: renderTargetB });
-
-  const particlesPosition = useMemo(() => {
-    const length = size * size;
-    const particles = new Float32Array(length * 3);
-    for (let i = 0; i < length; i++) {
-      const i3 = i * 3;
-      particles[i3 + 0] = (i % size) / size;
-      particles[i3 + 1] = i / size / size;
+      // Random sizes for star variety
+      sizeArr[i] = 0.02 + Math.random() * 0.06;
     }
-    return particles;
-  }, [size]);
+    return { positions: pos, sizes: sizeArr };
+  }, []);
 
-  const uniforms = useMemo(
-    () => ({
-      uPositions: {
-        value: null,
-      },
-      uColor: {
-        value: new THREE.Color("white"),
-      },
-    }),
-    []
-  );
+  // Lighter blue for dark mode, light gray for light mode
+  const uniforms = useRef({
+    uColor: { value: new THREE.Color(isDarkMode ? 0x6bb3ff : 0xb0b0b0) }
+  });
+
+  // Update color when mode changes
+  useEffect(() => {
+    if (materialRef.current) {
+      materialRef.current.uniforms.uColor.value.set(isDarkMode ? 0x6bb3ff : 0xb0b0b0);
+    }
+  }, [isDarkMode]);
 
   useFrame((state) => {
-    const { gl, clock, pointer } = state;
-    
-    const velocity = pointer.clone().sub(prevPointer.current).multiplyScalar(15.0);
-    prevPointer.current.copy(pointer);
-
-    if (simulationMaterialRef.current) {
-      simulationMaterialRef.current.uniforms.uMouse.value.set(pointer.x, pointer.y, 0);
-      simulationMaterialRef.current.uniforms.uVelocity.value.lerp(velocity, 0.05);
-      simulationMaterialRef.current.uniforms.uTime.value = clock.elapsedTime;
-      if (!firstFrame.current) {
-        simulationMaterialRef.current.uniforms.positions.value = targets.current.read.texture;
-      }
+    if (meshRef.current) {
+      // Subtle rotation based on time
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.02;
     }
-
-    gl.setRenderTarget(targets.current.write);
-    gl.clear();
-    gl.render(scene, camera);
-    gl.setRenderTarget(null);
-
-    if (points.current) {
-      points.current.material.uniforms.uPositions.value = targets.current.write.texture;
-    }
-
-    const tmp = targets.current.read;
-    targets.current.read = targets.current.write;
-    targets.current.write = tmp;
-    
-    if (firstFrame.current) firstFrame.current = false;
   });
 
   return (
-    <>
-      {createPortal(
-        <mesh>
-          <SimulationMaterial ref={simulationMaterialRef} args={[size]} />
-          <bufferGeometry>
-            <bufferAttribute
-              attach="attributes-position"
-              args={[positions, 3]}
-              count={positions.length / 3}
-            />
-            <bufferAttribute
-              attach="attributes-uv"
-              args={[uvs, 2]}
-              count={uvs.length / 2}
-            />
-          </bufferGeometry>
-        </mesh>,
-        scene
-      )}
-      <points ref={points}>
-        <bufferGeometry>
-          <bufferAttribute
-            attach="attributes-position"
-            args={[particlesPosition, 3]}
-            count={particlesPosition.length / 3}
-          />
-        </bufferGeometry>
-        <shaderMaterial
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-          fragmentShader={renderFragmentShader}
-          vertexShader={renderVertexShader}
-          uniforms={uniforms}
+    <points ref={meshRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={count}
+          array={positions}
+          itemSize={3}
         />
-      </points>
-    </>
+        <bufferAttribute
+          attach="attributes-size"
+          count={count}
+          array={sizes}
+          itemSize={1}
+        />
+      </bufferGeometry>
+      <shaderMaterial
+        ref={materialRef}
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={uniforms.current}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
   );
 };
 
 const FboAnimation = () => {
-  const [isMobile, setIsMobile] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const containerRef = useRef();
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const mousePos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // Pause rendering when off-screen
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
-      { threshold: 0 }
-    );
-
-    observer.observe(container);
+    const checkDarkMode = () => setIsDarkMode(document.documentElement.classList.contains('dark'));
+    checkDarkMode();
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     return () => observer.disconnect();
   }, []);
 
+  // Track mouse position outside of Canvas
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      mousePos.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mousePos.current.y = -((e.clientY / window.innerHeight) * 2 - 1);
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   return (
-    <div ref={containerRef} style={{ width: "100vw", height: "100vh" }}>
+    <div style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
       <Canvas
-        camera={{ position: [0, 0, 1.4] }}
-        style={{ background: "black", width: "100%", height: "100%" }}
+        camera={{ position: [0, 0, 3], fov: 75 }}
         dpr={[1, 2]}
-        frameloop={isVisible ? "always" : "never"}
+        gl={{ alpha: true }}
+        style={{ background: "transparent" }}
       >
-        <ambientLight intensity={0.5} />
-        <RotatingScene>
-          <FBOParticles />
+        <RotatingScene mousePos={mousePos}>
+          <Particles isDarkMode={isDarkMode} />
         </RotatingScene>
-        {!isMobile && <OrbitControls enableZoom={false} enablePan={false} />}
       </Canvas>
     </div>
   );

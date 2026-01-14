@@ -1,6 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import llaPreview from '../assets/projectPreviews/llaPreview.gif';
+import posturizePreview from '../assets/projectPreviews/posturizePreview.gif';
+import regressionPreview from '../assets/projectPreviews/regressionModel.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -71,9 +74,9 @@ const Projects = () => {
         "scalable architecture supporting growth from 60 to 1000+ users"
       ],
       tags: ["Node.js", "Express", "PostgreSQL", "React"],
-      gif: "/projects/legacy-louisiana.gif",
-      liveUrl: "#",
-      codeUrl: "#"
+      gif: llaPreview,
+      liveUrl: "https://legacylouisiana.vercel.app/",
+      codeUrl: "https://github.com/AryaShrestha05/legacylouisiana"
     },
     {
       title: "posturize",
@@ -84,7 +87,7 @@ const Projects = () => {
         "d3.js visualizations for instant user feedback"
       ],
       tags: ["React", "Flask", "OpenCV", "MediaPipe"],
-      gif: "/projects/posturize.gif",
+      gif: posturizePreview,
       liveUrl: "#",
       codeUrl: "#"
     },
@@ -97,7 +100,7 @@ const Projects = () => {
         "feature-engineered variables for better model performance"
       ],
       tags: ["Python", "NumPy", "Matplotlib"],
-      gif: "/projects/polynomial-regression.gif",
+      gif: regressionPreview,
       codeUrl: "#"
     }
   ];

@@ -9,12 +9,22 @@
     <style>
       /* Prevent flash of unstyled content */
       html.dark {
-        background-color: #000000;
+        background-color: #161515;
         color-scheme: dark;
       }
       html:not(.dark) {
         background-color: #ffffff;
         color-scheme: light;
+      }
+      /* Fallback loading indicator */
+      #root:empty::after {
+        content: 'Loading...';
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #888;
+        font-family: system-ui, sans-serif;
       }
     </style>
     <script>
