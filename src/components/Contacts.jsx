@@ -14,11 +14,11 @@ const Contacts = () => {
   const footerRef = useRef();
 
   const socialLinks = [
-    { icon: FaEnvelope, href: 'mailto:your.email@example.com', label: 'Email' },
-    { icon: FaLinkedin, href: 'https://linkedin.com/in/yourprofile', label: 'LinkedIn' },
-    { icon: FaGithub, href: 'https://github.com/yourprofile', label: 'GitHub' },
-    { icon: FaInstagram, href: 'https://instagram.com/yourprofile', label: 'Instagram' },
-    { icon: SiDevpost, href: 'https://devpost.com/yourprofile', label: 'Devpost' },
+    { icon: FaEnvelope, href: 'mailto:arya.shrestha1@marist.edu', label: 'Email' },
+    { icon: FaLinkedin, href: 'https://www.linkedin.com/in/aryashrestha05/', label: 'LinkedIn' },
+    { icon: FaGithub, href: 'https://github.com/AryaShrestha05', label: 'GitHub' },
+    { icon: FaInstagram, href: 'https://www.instagram.com/aryashresthaa/', label: 'Instagram' },
+    { icon: SiDevpost, href: 'https://devpost.com/AryaShrestha05', label: 'Devpost' },
   ];
 
   useEffect(() => {

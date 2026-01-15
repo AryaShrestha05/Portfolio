@@ -239,6 +239,11 @@
     opacity: 0;
   }
 }
+/* Ensure the iframe doesn't flicker when the shield is removed */
+iframe {
+  background-color: white;
+  color-scheme: light; /* Forces the scrollbars to stay light mode even if site is dark */
+}
 
 /* Scroll Progress - FIXED Visibility & Position */
 .scroll-progress-border {

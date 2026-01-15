@@ -77,9 +77,9 @@ const Beyond = () => {
       {/* Split Title with parallax - full width */}
       <div className="w-full flex flex-col items-center mb-16 select-none pointer-events-none">
         <h2 ref={beyondTheRef} className="section-title !leading-[0.7]">
-          beyond the
+          beyond
         </h2>
-        <h2 ref={classroomRef} className="section-title mt-10 !leading-[0.9]">
+        <h2 ref={classroomRef} className="section-title mt-5 !leading-[0.9]">
           classroom
         </h2>
       </div>

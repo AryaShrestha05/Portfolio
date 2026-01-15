@@ -279,6 +279,41 @@
     50% { opacity: 1; }
   }
 }
+@layer components {
+  /* Text Glow - Subtitle */
+  .glow-text {
+    text-shadow: 0 0 15px rgba(24, 24, 27, 0.1);
+    transition: text-shadow 0.3s ease;
+  }
+
+  .dark .glow-text {
+    /* Blue-ish glow for dark mode to match your accent */
+    text-shadow: 0 0 20px rgba(96, 165, 250, 0.4);
+  }
+
+  /* Button Glow - Resume */
+  .glow-button {
+    box-shadow: 0 0 15px rgba(24, 24, 27, 0.05);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--color-background);
+  }
+
+  .glow-button:hover {
+    box-shadow: 0 0 25px rgba(24, 24, 27, 0.15);
+    transform: translateY(-2px) scale(1.02);
+  }
+
+  .dark .glow-button {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 20px rgba(96, 165, 250, 0.1);
+  }
+
+  .dark .glow-button:hover {
+    box-shadow: 0 0 35px rgba(96, 165, 250, 0.3);
+    border-color: var(--color-foreground);
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

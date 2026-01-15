@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import llaPreview from '../assets/projectPreviews/llaPreview.gif';
 import posturizePreview from '../assets/projectPreviews/posturizePreview.gif';
 import regressionPreview from '../assets/projectPreviews/regressionModel.png';
+import mojitoPreview from '../assets/projectPreviews/mojitoPreview.gif';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -96,17 +97,17 @@ const Projects = () => {
       codeUrl: "#"
     },
     {
-      title: "grab a mocktail",
+      title: "grab a mojito",
       subtitle: "interactive web app // 2025",
       description: [
-        "recipe discovery app with smooth scroll-based animations",
-        "built custom gsap transitions for seamless user experience",
-        "responsive design with dynamic filtering and search"
+        "bar app with smooth scroll-based animations",
+        "built custom gsap transitions for seamless ui",
+        "responsive design, dynamic filtering and search"
       ],
       tags: ["React", "JavaScript", "GSAP"],
-      gif: "",
-      liveUrl: "#",
-      codeUrl: "#"
+      gif: mojitoPreview,
+      liveUrl: "https://grabamojito.vercel.app/",
+      codeUrl: "https://github.com/AryaShrestha05/grabamojito"
     },
     {
       title: "polynomial regression",

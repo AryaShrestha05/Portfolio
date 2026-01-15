@@ -97,7 +97,8 @@ const Experience = () => {
         'shipped ai learning platform for 50+ users',
         'designed rest apis for ai tutoring pipelines',
         'built automated notification systems'
-      ]
+      ],
+      link: 'https://www.linkedin.com/company/docere-learn/posts/?feedView=all',
     },
     {
       role: 'lms quality developer',
@@ -109,7 +110,8 @@ const Experience = () => {
         'developed 150+ page digital education site',
         'audited 3,000+ courses for wcag ',
         'resolved platform issues via jira'
-      ]
+      ],
+      link: 'https://my.de.marist.edu/',
     },
     {
       role: 'tech fellow',
@@ -215,7 +217,7 @@ const Experience = () => {
                     </a>
                   ) : (
                     <>
-                      <button className="btn cursor-target text-[11px] font-bold uppercase tracking-tighter">
+                      <button href={item.link} className="btn cursor-target text-[11px] font-bold uppercase tracking-tighter">
                         my team
                       </button>
                       <button className="btn cursor-target text-[11px] font-bold uppercase tracking-tighter">

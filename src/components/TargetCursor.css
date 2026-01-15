@@ -40,7 +40,7 @@
 
 .target-cursor-ring.is-hovering {
   background: transparent;
-  border: 5px solid #fff;
+  border: 4px solid #fff;
   /* border-radius is handled by GSAP to ensure stadium shape */
   box-shadow:
     0 0 15px rgba(255, 255, 255, 0.4),
