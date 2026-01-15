@@ -11,12 +11,12 @@ const Beyond = () => {
   const photoRefs = useRef([]);
 
   const photoData = [
-    { src: "", desc: "Project Build // 2025" },
-    { src: "", desc: "Community Outreach" },
-    { src: "", desc: "Technical Fellowship" },
-    { src: "", desc: "Hackathon Phase" },
-    { src: "", desc: "Collaborative Research" },
-    { src: "", desc: "Laboratory Work" },
+    { src: "", desc: "Basketball" },
+    { src: "", desc: "Hackathons" },
+    { src: "", desc: "Gym" },
+    { src: "", desc: "Food" },
+    { src: "", desc: "Nepal" },
+    { src: "", desc: "Music" },
   ];
 
   useEffect(() => {

@@ -21,15 +21,27 @@ const StartScreen = () => {
 
     textTop.fromTo(
       trigRef.current,
-      { opacity: 0, x: 100 },
-      { opacity: 1, x: 0, duration: 1.5, ease: "power2.out" }
-    );
+      { opacity: 0, x: 150 },
+      { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" }
+    ).to(trigRef.current, {
+      x: 15,
+      duration: 3,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: -1
+    });
 
     textBottom.fromTo(
       trigRefTwo.current,
-      { opacity: 0, x: -100 },
-      { opacity: 1, x: 0, duration: 1.5, ease: "power2.out" }
-    );
+      { opacity: 0, x: -150 },
+      { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" }
+    ).to(trigRefTwo.current, {
+      x: -15,
+      duration: 3,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: -1
+    });
 
     subtitle.fromTo(
       subtitleRef.current,
