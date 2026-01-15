@@ -225,7 +225,7 @@ const Experience = () => {
     <section ref={sectionRef} id="experience" className="relative overflow-hidden">
       <div ref={pinContainerRef} className="h-screen w-full flex flex-col items-center justify-center">
         {/* Background Title */}
-        <div className="absolute top-[18vh] md:top-[15vh] w-full flex justify-center z-0 pointer-events-none">
+        <div className="absolute top-[15vh] md:top-[15vh] w-full flex justify-center z-0 pointer-events-none">
           <h3 ref={experienceTextRef} className="section-title text-6xl sm:text-7xl md:text-9xl">
             experience
           </h3>
