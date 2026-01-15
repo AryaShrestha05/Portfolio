@@ -137,38 +137,6 @@
     @apply relative z-10 min-h-screen w-full;
   }
 
-  /* ===========================================
-     CARD SYSTEM
-     All cards use rounded-2xl (1.5rem / 24px) for consistency
-  =========================================== */
-
-  .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(7px);
-    -webkit-backdrop-filter: blur(7px);
-    border: 2px solid var(--color-muted-foreground);
-    border-radius: 1.5rem; /* rounded-2xl equivalent */
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-    transition: background-color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
-  }
-
-  .dark .glass-card {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid var(--color-muted-foreground);
-  }
-
-  .glass-card:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: var(--color-foreground);
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
-  }
-
-  .dark .glass-card:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: var(--color-foreground);
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
-  }
-
   /* Inner containers within cards */
   .card-inner {
     @apply rounded-2xl overflow-hidden;
@@ -308,4 +276,36 @@
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+/* ===========================================
+   GLASS CARD - Outside @layer for production reliability
+=========================================== */
+.glass-card {
+  background-color: rgba(255, 255, 255, 0.03);
+  -webkit-backdrop-filter: blur(7px);
+  backdrop-filter: blur(7px);
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--color-muted-foreground);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  transition: background-color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+}
+
+.dark .glass-card {
+  background-color: rgba(255, 255, 255, 0.02);
+  border-width: 1px;
+}
+
+.glass-card:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: var(--color-foreground);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+}
+
+.dark .glass-card:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-color: var(--color-foreground);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
 }
