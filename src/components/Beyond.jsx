@@ -72,37 +72,41 @@ const Beyond = () => {
     <section
       ref={sectionRef}
       id="beyond"
-      className="min-h-screen py-32 flex flex-col items-center relative overflow-hidden"
+      className="min-h-screen py-20 md:py-32 flex flex-col items-center relative overflow-hidden"
     >
       {/* Split Title with parallax - full width */}
-      <div className="w-full flex flex-col items-center mb-16 select-none pointer-events-none">
-        <h2 ref={beyondTheRef} className="section-title !leading-[0.7]">
+      <div className="w-full flex flex-col items-center mb-12 md:mb-16 select-none pointer-events-none">
+        <h2 ref={beyondTheRef} className="section-title text-6xl sm:text-7xl md:text-9xl !leading-[0.7]">
           beyond
         </h2>
-        <h2 ref={classroomRef} className="section-title mt-5 !leading-[0.9]">
+        <h2 ref={classroomRef} className="section-title text-6xl sm:text-7xl md:text-9xl mt-3 md:mt-5 !leading-[0.9]">
           classroom
         </h2>
       </div>
 
       {/* Photo Grid - 6 square photos */}
-      <div className="z-10 w-full max-w-5xl px-6">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+      <div className="z-10 w-full max-w-5xl px-5 sm:px-8 md:px-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
           {photoData.map((item, i) => (
             <div
               key={i}
               ref={el => photoRefs.current[i] = el}
-              className="group relative aspect-square overflow-hidden cursor-pointer rounded-2xl border border-border"
+              className="group relative aspect-square overflow-hidden cursor-pointer rounded-xl md:rounded-2xl border border-border"
             >
               {/* Image - fills entire card */}
-              <img
-                src={item.src || ""}
-                alt={item.desc}
-                className="w-full h-full object-cover bg-muted transition-all duration-500 group-hover:scale-110"
-              />
+              {item.src ? (
+                <img
+                  src={item.src}
+                  alt={item.desc}
+                  className="w-full h-full object-cover bg-muted transition-all duration-500 group-hover:scale-110"
+                />
+              ) : (
+                <div className="w-full h-full bg-muted" />
+              )}
 
-              {/* Hover Overlay with Description */}
-              <div className="absolute inset-0 bg-background/90 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center p-4 rounded-2xl">
-                <p className="font-sans text-xs md:text-sm tracking-wide text-foreground text-center">
+              {/* Overlay with Description - visible on mobile, hover on desktop */}
+              <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/50 to-transparent md:bg-background/90 md:backdrop-blur-sm md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 flex items-end md:items-center justify-center p-3 md:p-4 rounded-xl md:rounded-2xl">
+                <p className="font-sans text-[10px] sm:text-xs md:text-sm tracking-wide text-foreground text-center md:text-center">
                   {item.desc}
                 </p>
               </div>

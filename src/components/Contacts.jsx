@@ -128,20 +128,20 @@ const Contacts = () => {
     <section
       ref={sectionRef}
       id="contacts"
-      className="min-h-screen py-32 flex flex-col items-center relative overflow-hidden"
+      className="min-h-screen py-20 md:py-32 flex flex-col items-center relative overflow-hidden"
     >
       {/* Split Title with parallax */}
-      <div className="w-full flex flex-col items-center mb-20 select-none pointer-events-none">
-        <h2 ref={letsRef} className="section-title !leading-[0.9]">
+      <div className="w-full flex flex-col items-center mb-16 md:mb-20 select-none pointer-events-none">
+        <h2 ref={letsRef} className="section-title text-6xl sm:text-7xl md:text-9xl !leading-[0.9]">
           let's
         </h2>
-        <h2 ref={connectRef} className="section-title mt-1 !leading-[0.9]">
+        <h2 ref={connectRef} className="section-title text-6xl sm:text-7xl md:text-9xl mt-1 !leading-[0.9]">
           connect!
         </h2>
       </div>
 
       {/* Social Icons */}
-      <div className="z-10 flex items-center justify-center flex-wrap gap-6 md:gap-10">
+      <div className="z-10 flex items-center justify-center flex-wrap gap-4 sm:gap-6 md:gap-10 px-5">
         {socialLinks.map((social, i) => (
           <div
             key={i}
@@ -151,12 +151,12 @@ const Contacts = () => {
               href={social.href}
               target={social.href.startsWith('mailto') ? undefined : '_blank'}
               rel={social.href.startsWith('mailto') ? undefined : 'noopener noreferrer'}
-              className="cursor-target block p-4 rounded-full border border-border bg-card/50 hover:bg-card hover:border-foreground transition-colors duration-300"
+              className="cursor-target block p-3 md:p-4 rounded-full border border-border bg-card/50 hover:bg-card hover:border-foreground active:scale-95 transition-all duration-300"
               aria-label={social.label}
             >
               <social.icon
-                size={28}
-                className="text-foreground"
+                size={24}
+                className="text-foreground md:w-7 md:h-7"
               />
             </a>
           </div>
@@ -164,8 +164,8 @@ const Contacts = () => {
       </div>
 
       {/* Footer */}
-      <div ref={footerRef} className="mt-24 text-center">
-        <p className="text-sm font-sans lowercase tracking-wide footer-glow">
+      <div ref={footerRef} className="mt-16 md:mt-24 text-center px-5">
+        <p className="text-xs md:text-sm font-sans lowercase tracking-wide footer-glow">
           built with love, by arya shrestha
         </p>
       </div>

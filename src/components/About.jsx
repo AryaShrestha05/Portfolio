@@ -68,20 +68,20 @@ const About = () => {
     <section
       ref={sectionRef}
       id="about"
-      className="min-h-screen py-16 md:py-20 flex flex-col items-center justify-center md:justify-end overflow-hidden relative"
+      className="min-h-screen py-20 md:py-24 flex flex-col items-center justify-center md:justify-end overflow-hidden relative"
     >
       {/* Parallax Headers */}
-      <div className="absolute top-[8%] md:top-[10%] flex flex-col items-center select-none pointer-events-none z-0">
-        <h3 ref={aboutTextRef} className="section-title !leading-[0.7] text-7xl md:text-9xl will-change-transform">
+      <div className="absolute top-[12%] md:top-[10%] flex flex-col items-center select-none pointer-events-none z-0">
+        <h3 ref={aboutTextRef} className="section-title !leading-[0.7] text-6xl sm:text-7xl md:text-9xl will-change-transform">
           about
         </h3>
-        <h3 ref={meTextRef} className="section-title !leading-[0.9] text-7xl md:text-9xl ml-12 md:ml-0 shadow-text will-change-transform">
+        <h3 ref={meTextRef} className="section-title !leading-[0.9] text-6xl sm:text-7xl md:text-9xl ml-8 md:ml-0 shadow-text will-change-transform">
           me
         </h3>
       </div>
 
       {/* Content Container */}
-      <div className="w-full max-w-6xl px-6 z-10 mt-24 md:mt-0 pb-10 md:pb-15">
+      <div className="w-full max-w-6xl px-5 sm:px-8 md:px-6 z-10 mt-32 md:mt-0 pb-10 md:pb-15">
         <div className="flex flex-col-reverse md:flex-row gap-6 md:gap-8 items-center md:items-end justify-center">
           
           {/* Left: Info Card */}

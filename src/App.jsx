@@ -67,11 +67,11 @@ function App() {
           </div>
         </div>
 
-        <main className="w-full pt-24">
+        <main className="w-full pt-20 md:pt-24">
           {/* We pass isLoading here to trigger Hero animations later */}
           <StartScreen isLoading={loading} />
 
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 space-y-32">
+          <div className="space-y-16 md:space-y-32">
             <About />
             <Experience />
             <Projects />

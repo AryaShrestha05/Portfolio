@@ -26,6 +26,14 @@ const GooeyNav = ({
   const filterRef = useRef(null);
   const textRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const noise = (n = 1) => n / 2 - Math.random() * n;
 
@@ -194,6 +202,34 @@ const GooeyNav = ({
     return () => observer.disconnect();
   }, [items, activeIndex]);
 
+  // Mobile - just show theme switcher
+  if (isMobile) {
+    return (
+      <GlassSurface
+        width="auto"
+        height="auto"
+        borderRadius={50}
+        backgroundOpacity={0.35}
+        saturation={1}
+        borderWidth={0.07}
+        brightness={45}
+        opacity={0.93}
+        blur={11}
+        displace={1.5}
+        distortionScale={-180}
+        redOffset={0}
+        greenOffset={10}
+        blueOffset={20}
+        className="px-3 py-2"
+      >
+        <div className="cursor-target rounded-full">
+          <AnimatedThemeSwitcher />
+        </div>
+      </GlassSurface>
+    );
+  }
+
+  // Desktop - full navigation
   return (
     <GlassSurface
       width="auto"

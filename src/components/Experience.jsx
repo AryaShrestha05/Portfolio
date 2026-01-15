@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import GlassSurface from './GlassSurface';
 
 import docereLogo from '../assets/photos/docere.jpeg';
 import maristLogo from '../assets/photos/marist.jpeg';
@@ -21,70 +20,141 @@ const Experience = () => {
   useEffect(() => {
     const slider = sliderRef.current;
     const cards = cardsRef.current;
+    let mm = gsap.matchMedia();
 
-    gsap.fromTo(
-      [experienceTextRef.current, sliderRef.current],
-      { opacity: 0, y: 30 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
+    mm.add("(min-width: 768px)", () => {
+      // Desktop animations
+      gsap.fromTo(
+        [experienceTextRef.current, sliderRef.current],
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1.2,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 80%",
+          }
         }
-      }
-    );
+      );
 
-    gsap.fromTo(
-      experienceTextRef.current,
-      { x: -250 },
-      {
-        x: 250,
-        ease: "none",
+      gsap.fromTo(
+        experienceTextRef.current,
+        { x: -250 },
+        {
+          x: 250,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: () => `+=${slider.scrollWidth + window.innerHeight}`,
+            scrub: 1,
+          }
+        }
+      );
+
+      const pinTl = gsap.timeline({
         scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: () => `+=${slider.scrollWidth + window.innerHeight}`,
+          trigger: pinContainerRef.current,
+          start: "top top",
+          end: () => `+=${slider.scrollWidth}`,
+          pin: true,
           scrub: 1,
+          invalidateOnRefresh: true,
         }
-      }
-    );
+      });
 
-    const pinTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: pinContainerRef.current,
-        start: "top top",
-        end: () => `+=${slider.scrollWidth}`,
-        pin: true,
-        scrub: 1,
-        invalidateOnRefresh: true,
-      }
+      pinTl.to(slider, {
+        x: () => -(slider.scrollWidth - window.innerWidth),
+        ease: "none",
+      });
+
+      gsap.set(cards, { scale: 0.6, opacity: 0 });
+
+      cards.forEach((card) => {
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            containerAnimation: pinTl,
+            start: "left 95%",
+            end: "right 5%",
+            scrub: true,
+          }
+        })
+          .to(card, { opacity: 1, scale: 0.85, ease: "power2.inOut" })
+          .to(card, { opacity: 0, scale: 0.6, ease: "power2.inOut" });
+      });
     });
 
-    pinTl.to(slider, {
-      x: () => -(slider.scrollWidth - window.innerWidth),
-      ease: "none",
-    });
+    mm.add("(max-width: 767px)", () => {
+      // Mobile animations - same as desktop but adjusted
+      gsap.fromTo(
+        [experienceTextRef.current, sliderRef.current],
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 80%",
+          }
+        }
+      );
 
-    gsap.set(cards, { scale: 0.6, opacity: 0 });
+      gsap.fromTo(
+        experienceTextRef.current,
+        { x: -80 },
+        {
+          x: 80,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: () => `+=${slider.scrollWidth + window.innerHeight}`,
+            scrub: 1,
+          }
+        }
+      );
 
-    cards.forEach((card) => {
-      gsap.timeline({
+      const pinTl = gsap.timeline({
         scrollTrigger: {
-          trigger: card,
-          containerAnimation: pinTl,
-          start: "left 95%",
-          end: "right 5%",
-          scrub: true,
+          trigger: pinContainerRef.current,
+          start: "top top",
+          end: () => `+=${slider.scrollWidth}`,
+          pin: true,
+          pinSpacing: true,
+          scrub: 1,
+          invalidateOnRefresh: true,
         }
-      })
-        .to(card, { opacity: 1, scale: 0.85, ease: "power2.inOut" })
-        .to(card, { opacity: 0, scale: 0.6, ease: "power2.inOut" });
+      });
+
+      pinTl.to(slider, {
+        x: () => -(slider.scrollWidth - window.innerWidth),
+        ease: "none",
+      });
+
+      // Mobile: Start with higher scale
+      gsap.set(cards, { scale: 0.8, opacity: 0 });
+
+      cards.forEach((card) => {
+        gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            containerAnimation: pinTl,
+            start: "left 100%",
+            end: "right 0%",
+            scrub: true,
+          }
+        })
+          .to(card, { opacity: 1, scale: 0.95, ease: "power2.inOut" })
+          .to(card, { opacity: 0, scale: 0.8, ease: "power2.inOut" });
+      });
     });
 
-    return () => ScrollTrigger.getAll().forEach(t => t.kill());
+    return () => mm.revert();
   }, []);
 
   const items = [
@@ -155,14 +225,14 @@ const Experience = () => {
     <section ref={sectionRef} id="experience" className="relative overflow-hidden">
       <div ref={pinContainerRef} className="h-screen w-full flex flex-col items-center justify-center">
         {/* Background Title */}
-        <div className="absolute top-[15vh] w-full flex justify-center z-0 pointer-events-none">
-          <h3 ref={experienceTextRef} className="section-title">
+        <div className="absolute top-[18vh] md:top-[15vh] w-full flex justify-center z-0 pointer-events-none">
+          <h3 ref={experienceTextRef} className="section-title text-6xl sm:text-7xl md:text-9xl">
             experience
           </h3>
         </div>
 
         {/* Cards Slider */}
-        <div className="w-full flex items-center relative z-10 mt-[12vh] ">
+        <div className="w-full flex items-center relative z-10 mt-[18vh] md:mt-[12vh]">
           <div
             ref={sliderRef}
             className="flex items-center"
@@ -176,10 +246,10 @@ const Experience = () => {
               <div
                 key={index}
                 ref={el => cardsRef.current[index] = el}
-                className="flex-shrink-0 w-[350px] md:w-[400px] h-[420px] glass-card p-10 flex flex-col shadow-xl"
+                className="flex-shrink-0 w-[300px] md:w-[400px] h-[480px] md:h-[420px] glass-card p-6 md:p-10 flex flex-col shadow-xl"
               >
                 {/* Logo Section */}
-                <div className="w-16 h-16 mb-6 flex items-center justify-center overflow-hidden rounded-2xl border border-border bg-card">
+                <div className="w-14 h-14 md:w-16 md:h-16 mb-4 md:mb-6 flex-shrink-0 flex items-center justify-center overflow-hidden rounded-2xl border border-border bg-card">
                   <img
                     src={item.logo}
                     alt={item.company}
@@ -188,21 +258,21 @@ const Experience = () => {
                 </div>
 
                 {/* Company Name */}
-                <h4 className="text-3xl font-bold mb-1 text-foreground">
+                <h4 className="text-2xl md:text-3xl font-bold mb-1 text-foreground">
                   {item.company}
                 </h4>
 
                 {/* Role & Period */}
-                <p className="text-[13px] font-semibold mb-6 uppercase tracking-widest text-muted-foreground">
+                <p className="text-[11px] md:text-[13px] font-semibold mb-4 md:mb-6 uppercase tracking-widest text-muted-foreground">
                   {item.role} • {item.period}
                 </p>
 
                 {/* Points */}
-                <ul className="space-y-3 mb-6 font-sans">
+                <ul className="space-y-2 md:space-y-3 mb-4 md:mb-6 font-sans flex-grow">
                   {item.points.map((point, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <span className="text-xl mt-[-6px] text-foreground">•</span>
-                      <p className="text-[15px] leading-snug font-light lowercase text-foreground">
+                    <li key={i} className="flex items-start gap-2 md:gap-3">
+                      <span className="text-lg md:text-xl mt-[-4px] md:mt-[-6px] text-foreground">•</span>
+                      <p className="text-[13px] md:text-[15px] leading-snug font-light lowercase text-foreground">
                         {point}
                       </p>
                     </li>
