@@ -83,8 +83,7 @@ function App() {
         </div>
 
         <main className="w-full pt-20 md:pt-24">
-          {/* We pass isLoading here to trigger Hero animations later */}
-          <StartScreen isLoading={loading} />
+          <StartScreen />
 
           <div className="space-y-16 md:space-y-32">
             <About />

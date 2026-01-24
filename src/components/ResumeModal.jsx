@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import resumePdf from '../assets/resume/arya_shrestha_resume.pdf';
 
@@ -6,6 +6,8 @@ const ResumeModal = ({ isOpen, onClose }) => {
   const overlayRef = useRef();
   const modalRef = useRef();
   const scrollOffset = useRef(0);
+  const [pdfLoaded, setPdfLoaded] = useState(false);
+  const [pdfError, setPdfError] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -130,12 +132,42 @@ const ResumeModal = ({ isOpen, onClose }) => {
 
         {/* PDF Viewer - Explicitly White */}
         <div className="flex-1 p-3 md:p-6 bg-muted/10">
-          <div className="w-full h-full rounded-2xl overflow-hidden border border-border shadow-inner bg-white">
+          <div className="relative w-full h-full rounded-2xl overflow-hidden border border-border shadow-inner bg-white">
+            {/* Loading State */}
+            {!pdfLoaded && !pdfError && (
+              <div className="absolute inset-0 flex items-center justify-center bg-white">
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-8 h-8 border-2 border-muted-foreground/30 border-t-foreground rounded-full animate-spin" />
+                  <span className="text-xs text-muted-foreground uppercase tracking-widest">Loading PDF...</span>
+                </div>
+              </div>
+            )}
+
+            {/* Error State */}
+            {pdfError && (
+              <div className="absolute inset-0 flex items-center justify-center bg-white">
+                <div className="flex flex-col items-center gap-4 text-center p-6">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted-foreground">
+                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+                  </svg>
+                  <p className="text-sm text-muted-foreground">Unable to load PDF preview</p>
+                  <button
+                    onClick={handleDownload}
+                    className="px-4 py-2 bg-foreground text-background rounded-full text-xs font-bold uppercase tracking-widest hover:opacity-90 transition-opacity"
+                  >
+                    Download Instead
+                  </button>
+                </div>
+              </div>
+            )}
+
             <iframe
               src={`${resumePdf}#toolbar=0&navpanes=0`}
               title="Resume"
               className="w-full h-full"
               style={{ border: 'none' }}
+              onLoad={() => setPdfLoaded(true)}
+              onError={() => setPdfError(true)}
             />
           </div>
         </div>

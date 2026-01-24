@@ -164,7 +164,7 @@ const Contacts = () => {
       <div className="z-10 flex items-center justify-center flex-wrap gap-4 sm:gap-6 md:gap-10 px-5">
         {socialLinks.map((social, i) => (
           <div
-            key={i}
+            key={social.label}
             ref={el => linksRef.current[i] = el}
           >
             <a

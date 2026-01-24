@@ -244,7 +244,7 @@ const Experience = () => {
           >
             {items.map((item, index) => (
               <div
-                key={index}
+                key={item.company}
                 ref={el => cardsRef.current[index] = el}
                 className="flex-shrink-0 w-[280px] sm:w-[300px] lg:w-[400px] h-[460px] sm:h-[480px] lg:h-[420px] glass-card p-5 sm:p-6 lg:p-10 flex flex-col shadow-xl"
               >
@@ -270,7 +270,7 @@ const Experience = () => {
                 {/* Points */}
                 <ul className="space-y-2 md:space-y-3 mb-4 md:mb-6 font-sans flex-grow">
                   {item.points.map((point, i) => (
-                    <li key={i} className="flex items-start gap-2 md:gap-3">
+                    <li key={`${item.company}-point-${i}`} className="flex items-start gap-2 md:gap-3">
                       <span className="text-lg md:text-xl mt-[-4px] md:mt-[-6px] text-foreground">•</span>
                       <p className="text-[13px] md:text-[15px] leading-snug font-light lowercase text-foreground">
                         {point}

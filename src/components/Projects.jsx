@@ -191,7 +191,7 @@ const Projects = () => {
       <div className="w-full max-w-5xl px-5 sm:px-8 md:px-6 z-10 md:mt-24">
         <div className="flex flex-col gap-8 md:gap-12">
           {projectList.map((project, index) => (
-            <div key={index} ref={el => cardsRef.current[index] = el} className="glass-card p-5 sm:p-6 md:p-8 flex flex-col md:flex-row gap-5 md:gap-8">
+            <div key={project.title} ref={el => cardsRef.current[index] = el} className="glass-card p-5 sm:p-6 md:p-8 flex flex-col md:flex-row gap-5 md:gap-8">
               <div className="md:w-2/5 flex-shrink-0 flex flex-col">
                 <div className="aspect-video w-full rounded-xl md:rounded-2xl overflow-hidden border border-border bg-muted">
                   <img src={project.gif} alt={project.title} className="w-full h-full object-cover" />
@@ -219,7 +219,7 @@ const Projects = () => {
                 <p className="text-xs md:text-sm font-semibold mb-4 md:mb-6 uppercase tracking-widest text-muted-foreground">{project.subtitle}</p>
                 <ul className="space-y-2 md:space-y-3 mb-4 md:mb-6 flex-grow font-sans">
                   {project.description.map((point, i) => (
-                    <li key={i} className="flex items-start gap-2 md:gap-3">
+                    <li key={`${project.title}-desc-${i}`} className="flex items-start gap-2 md:gap-3">
                       <span className="text-lg md:text-xl mt-[-3px] md:mt-[-4px] text-foreground">•</span>
                       <p className="text-sm md:text-base leading-relaxed font-light lowercase text-muted-foreground">{point}</p>
                     </li>

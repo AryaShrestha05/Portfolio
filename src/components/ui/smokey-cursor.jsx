@@ -1125,6 +1125,8 @@ export default function SmokeyCursor({
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchmove", handleTouchMove);
       window.removeEventListener("touchend", handleTouchEnd);
+      document.body.removeEventListener("mousemove", handleFirstMouseMove);
+      document.body.removeEventListener("touchstart", handleFirstTouchStart);
     };
   }, [
     simulationResolution,
