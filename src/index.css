@@ -13,12 +13,12 @@
 
   /* Define Tailwind color tokens with light mode defaults */
   --color-background: #ffffff;
-  --color-foreground: #000000;
+  --color-foreground: #2d2d2d;
   --color-muted: #f3f4f6;
   --color-muted-foreground: #4b5563;
   --color-border: rgba(0, 0, 0, 0.12);
   --color-card: rgba(255, 255, 255, 0.6);
-  --color-card-foreground: #000000;
+  --color-card-foreground: #2d2d2d;
   --color-accent: #f97316;
   --color-accent-foreground: #ffffff;
 }
@@ -30,13 +30,13 @@
   /* Light Mode (Default) */
   :root {
     --font-primary: "Georgia", "Times New Roman", serif;
-    --color-foreground: #000000;
+    --color-foreground: #2d2d2d;
     --color-background: #ffffff;
     --color-muted: #f3f4f6;
     --color-muted-foreground: #4b5563;
     --color-border: rgba(0, 0, 0, 0.12);
     --color-card: rgba(255, 255, 255, 0.6);
-    --color-card-foreground: #000000;
+    --color-card-foreground: #2d2d2d;
     --color-accent: #f97316;
     --color-accent-foreground: #ffffff;
     --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.662);
@@ -185,7 +185,7 @@
 
   /* --- OPTIMIZED GLOW SECTION (Fixed Performance) --- */
   .section-title {
-    @apply text-7xl sm:text-8xl lg:text-9xl font-thin lowercase tracking-tighter whitespace-nowrap select-none;
+    @apply text-5xl sm:text-6xl md:text-7xl lg:text-9xl font-thin lowercase tracking-tighter whitespace-nowrap select-none;
     color: var(--color-foreground);
     transition: color 300ms ease, filter 300ms ease;
     

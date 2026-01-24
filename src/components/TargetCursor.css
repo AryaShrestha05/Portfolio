@@ -1,48 +1,188 @@
-.target-cursor-wrapper {
+/* ========================================
+   PREMIUM CURSOR - Professional & Creative
+   ======================================== */
+
+.cursor-container {
   position: fixed;
   top: 0;
   left: 0;
-  width: 0;
-  height: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  z-index: 9999;
-  mix-blend-mode: difference;
-  will-change: transform;
-  backface-visibility: hidden;
-  transform: translateZ(0);
+  z-index: 99999;
+  overflow: hidden;
 }
 
-.target-cursor-ring {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* Original base size */
-  width: 16px; 
-  height: 16px;
-  background: #fff;
-  border: 0px solid transparent;
+/* ========================================
+   CENTER DOT - Precise Pointer
+   ======================================== */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--color-foreground, #fff);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
-  will-change: transform, width, height, border-radius;
-  
-  /* Smooth color and shadow transitions */
-  transition: 
-    background 0.3s ease,
-    border 0.3s ease,
-    box-shadow 0.3s ease;
+  z-index: 99999;
+  mix-blend-mode: difference;
+  will-change: transform;
 
+  /* Subtle inner glow */
   box-shadow:
-    0 0 10px rgba(255, 255, 255, 0.6),
-    0 0 20px rgba(255, 255, 255, 0.3);
+    0 0 10px var(--color-foreground, rgba(255, 255, 255, 0.8)),
+    0 0 20px var(--color-foreground, rgba(255, 255, 255, 0.4)),
+    0 0 30px var(--color-foreground, rgba(255, 255, 255, 0.2));
 }
 
-.target-cursor-ring.is-hovering {
+/* ========================================
+   OUTER RING - Elastic Following
+   ======================================== */
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--color-foreground, #fff);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 99998;
+  mix-blend-mode: difference;
+  will-change: transform, width, height, border-radius;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Gradient border effect using pseudo-element */
   background: transparent;
-  border: 4px solid #fff;
-  /* border-radius is handled by GSAP to ensure stadium shape */
+
+  /* Smooth transitions for non-animated properties */
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+
+/* Hover state */
+.cursor-ring.is-hovering {
+  border: 2px solid var(--color-foreground, #fff);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+
   box-shadow:
-    0 0 15px rgba(255, 255, 255, 0.4),
-    0 0 30px rgba(255, 255, 255, 0.2);
+    0 0 20px rgba(255, 255, 255, 0.15),
+    0 0 40px rgba(255, 255, 255, 0.1),
+    inset 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+/* ========================================
+   GLOW LAYER - Motion Trail
+   ======================================== */
+.cursor-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 99997;
+  opacity: 0;
+  will-change: transform, opacity;
+
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.05) 40%,
+    transparent 70%
+  );
+
+  filter: blur(10px);
+  mix-blend-mode: overlay;
+}
+
+/* ========================================
+   HOVER TEXT - Action Labels
+   ======================================== */
+.cursor-text {
+  font-family: var(--font-sans, system-ui, sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-foreground, #fff);
+  white-space: nowrap;
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* ========================================
+   CLICK RIPPLE - Interaction Feedback
+   ======================================== */
+.cursor-ripple {
+  position: fixed;
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--color-foreground, #fff);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+  z-index: 99996;
+  mix-blend-mode: difference;
+  opacity: 0.6;
+}
+
+/* ========================================
+   DARK MODE ADJUSTMENTS
+   ======================================== */
+.dark .cursor-dot {
+  box-shadow:
+    0 0 15px rgba(255, 255, 255, 0.9),
+    0 0 30px rgba(255, 255, 255, 0.5),
+    0 0 45px rgba(255, 255, 255, 0.3);
+}
+
+.dark .cursor-ring.is-hovering {
+  box-shadow:
+    0 0 25px rgba(255, 255, 255, 0.2),
+    0 0 50px rgba(255, 255, 255, 0.15),
+    inset 0 0 25px rgba(255, 255, 255, 0.08);
+}
+
+.dark .cursor-glow {
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.08) 40%,
+    transparent 70%
+  );
+}
+
+/* ========================================
+   PERFORMANCE OPTIMIZATIONS
+   ======================================== */
+@media (prefers-reduced-motion: reduce) {
+  .cursor-ring::before {
+    animation: none;
+  }
+
+  .cursor-glow {
+    display: none;
+  }
+}
+
+/* Hide on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .cursor-container {
+    display: none;
+  }
 }

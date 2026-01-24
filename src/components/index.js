@@ -20,6 +20,7 @@ export { default as GooeyNav } from './GooeyNav';
 export { default as FboAnimation } from './FboAnimation';
 export { default as GlassSurface } from './GlassSurface';
 export { default as TargetCursor } from './TargetCursor';
+export { default as SmokeyCursor } from './ui/smokey-cursor';
 
 // UI Components
 export { default as AnimatedThemeSwitcher } from './AnimatedThemeSwitcher';

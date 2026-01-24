@@ -55,17 +55,37 @@ const StartScreen = () => {
       { opacity: 1, y: 0, duration: 1.5, ease: "power2.out" }
     );
 
-    const scrollAnimation = gsap.timeline({
-      scrollTrigger: {
-        trigger: "#start-screen",
-        start: "top top",
-        end: "+=1500",
-        scrub: 1,
-      },
+    let mm = gsap.matchMedia();
+
+    mm.add("(min-width: 1024px)", () => {
+      const scrollAnimation = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#start-screen",
+          start: "top top",
+          end: "+=1500",
+          scrub: 1,
+        },
+      });
+
+      scrollAnimation.to(trigRef.current, { x: -300, ease: "none" }, 0)
+        .to(trigRefTwo.current, { x: 300, ease: "none" }, 0);
     });
 
-    scrollAnimation.to(trigRef.current, { x: -300, ease: "none" }, 0)
-      .to(trigRefTwo.current, { x: 300, ease: "none" }, 0);
+    mm.add("(max-width: 1023px)", () => {
+      const scrollAnimation = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#start-screen",
+          start: "top top",
+          end: "+=1000",
+          scrub: 1,
+        },
+      });
+
+      scrollAnimation.to(trigRef.current, { x: -100, ease: "none" }, 0)
+        .to(trigRefTwo.current, { x: 100, ease: "none" }, 0);
+    });
+
+    return () => mm.revert();
   }, []);
 
   return (
@@ -107,9 +127,8 @@ const StartScreen = () => {
       {/* CTA Button */}
       <button
         ref={btnRef}
-        className="btn-outline text-xl sm:text-2xl mt-8 font-primary"
-        data-cursor-hover
-        /* Corrected style syntax to use the CSS variable properly */
+        className="btn-outline text-xl sm:text-2xl mt-8 font-primary cursor-target"
+        data-cursor-text="View"
         style={{ fontFamily: 'var(--font-primary)' }}
         onClick={() => setIsResumeOpen(true)}
       >

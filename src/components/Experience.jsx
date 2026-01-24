@@ -22,7 +22,7 @@ const Experience = () => {
     const cards = cardsRef.current;
     let mm = gsap.matchMedia();
 
-    mm.add("(min-width: 768px)", () => {
+    mm.add("(min-width: 1024px)", () => {
       // Desktop animations
       gsap.fromTo(
         [experienceTextRef.current, sliderRef.current],
@@ -87,7 +87,7 @@ const Experience = () => {
       });
     });
 
-    mm.add("(max-width: 767px)", () => {
+    mm.add("(max-width: 1023px)", () => {
       // Mobile animations - same as desktop but adjusted
       gsap.fromTo(
         [experienceTextRef.current, sliderRef.current],
@@ -226,27 +226,27 @@ const Experience = () => {
       <div ref={pinContainerRef} className="h-screen w-full flex flex-col items-center justify-center">
         {/* Background Title */}
         <div className="absolute top-[15vh] md:top-[15vh] w-full flex justify-center z-0 pointer-events-none">
-          <h3 ref={experienceTextRef} className="section-title text-6xl sm:text-7xl md:text-9xl">
+          <h3 ref={experienceTextRef} className="section-title text-5xl sm:text-6xl md:text-7xl lg:text-9xl">
             experience
           </h3>
         </div>
 
         {/* Cards Slider */}
-        <div className="w-full flex items-center relative z-10 mt-[18vh] md:mt-[12vh]">
+        <div className="w-full flex items-center relative z-10 mt-[15vh] sm:mt-[18vh] lg:mt-[12vh]">
           <div
             ref={sliderRef}
             className="flex items-center"
             style={{
               width: 'max-content',
-              paddingLeft: 'calc(50vw - 200px)',
-              paddingRight: '50vw'
+              paddingLeft: 'max(1rem, calc(50vw - 150px))',
+              paddingRight: 'max(1rem, 50vw)'
             }}
           >
             {items.map((item, index) => (
               <div
                 key={index}
                 ref={el => cardsRef.current[index] = el}
-                className="flex-shrink-0 w-[300px] md:w-[400px] h-[480px] md:h-[420px] glass-card p-6 md:p-10 flex flex-col shadow-xl"
+                className="flex-shrink-0 w-[280px] sm:w-[300px] lg:w-[400px] h-[460px] sm:h-[480px] lg:h-[420px] glass-card p-5 sm:p-6 lg:p-10 flex flex-col shadow-xl"
               >
                 {/* Logo Section */}
                 <div className="w-14 h-14 md:w-16 md:h-16 mb-4 md:mb-6 flex-shrink-0 flex items-center justify-center overflow-hidden rounded-2xl border border-border bg-card">
@@ -282,7 +282,7 @@ const Experience = () => {
                 {/* Action Buttons */}
                 <div className="flex gap-3 mt-auto">
                   {item.link ? (
-                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="btn cursor-target text-[11px] font-bold uppercase tracking-tighter">
+                    <a href={item.link} target="_blank" rel="noopener noreferrer" className="btn cursor-target text-[11px] font-bold uppercase tracking-tighter" data-cursor-text="Visit">
                       website
                     </a>
                   ) : (

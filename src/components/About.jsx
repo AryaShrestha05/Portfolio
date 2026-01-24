@@ -15,7 +15,7 @@ const About = () => {
   useEffect(() => {
     let mm = gsap.matchMedia();
 
-    mm.add("(min-width: 768px)", () => {
+    mm.add("(min-width: 1024px)", () => {
       // Desktop Animations
       gsap.fromTo(
         [aboutTextRef.current, meTextRef.current, cardRef.current, imageCardRef.current],
@@ -38,7 +38,7 @@ const About = () => {
         .fromTo(imageCardRef.current, { y: 80 }, { y: -80, ease: "none" }, 0);
     });
 
-    mm.add("(max-width: 767px)", () => {
+    mm.add("(max-width: 1023px)", () => {
       // Mobile Animations: Reduced movement to prevent horizontal scroll issues
       gsap.fromTo(
         [aboutTextRef.current, meTextRef.current, cardRef.current, imageCardRef.current],
@@ -72,10 +72,10 @@ const About = () => {
     >
       {/* Parallax Headers */}
       <div className="absolute top-[12%] md:top-[10%] flex flex-col items-center select-none pointer-events-none z-0">
-        <h3 ref={aboutTextRef} className="section-title !leading-[0.7] text-6xl sm:text-7xl md:text-9xl will-change-transform">
+        <h3 ref={aboutTextRef} className="section-title !leading-[0.7] text-5xl sm:text-6xl md:text-7xl lg:text-9xl will-change-transform">
           about
         </h3>
-        <h3 ref={meTextRef} className="section-title !leading-[0.9] text-6xl sm:text-7xl md:text-9xl ml-8 md:ml-0 shadow-text will-change-transform">
+        <h3 ref={meTextRef} className="section-title !leading-[0.9] text-5xl sm:text-6xl md:text-7xl lg:text-9xl ml-8 lg:ml-0 shadow-text will-change-transform">
           me
         </h3>
       </div>

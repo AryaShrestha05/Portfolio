@@ -16,7 +16,7 @@ const Projects = () => {
   useEffect(() => {
     let mm = gsap.matchMedia();
 
-    mm.add("(min-width: 768px)", () => {
+    mm.add("(min-width: 1024px)", () => {
       // Desktop animations
       gsap.fromTo(
         cardsRef.current,
@@ -70,7 +70,7 @@ const Projects = () => {
       });
     });
 
-    mm.add("(max-width: 767px)", () => {
+    mm.add("(max-width: 1023px)", () => {
       // Mobile animations - reduced parallax to prevent overflow
       gsap.fromTo(
         cardsRef.current,
@@ -185,7 +185,7 @@ const Projects = () => {
     <section ref={sectionRef} id="projects" className="min-h-screen py-20 md:py-32 flex flex-col items-center relative overflow-hidden">
       {/* Title - relative on mobile, absolute on desktop */}
       <div className="w-full flex justify-center z-0 pointer-events-none mb-8 md:mb-0 md:absolute md:top-[3.5%]">
-        <h3 ref={backgroundTextRef} className="section-title text-6xl sm:text-7xl md:text-9xl">projects</h3>
+        <h3 ref={backgroundTextRef} className="section-title text-5xl sm:text-6xl md:text-7xl lg:text-9xl">projects</h3>
       </div>
 
       <div className="w-full max-w-5xl px-5 sm:px-8 md:px-6 z-10 md:mt-24">
@@ -199,13 +199,15 @@ const Projects = () => {
                 <div className="flex flex-wrap gap-2 md:gap-3 mt-3 md:mt-4">
                   {project.liveUrl && (
                     <a href={project.liveUrl} target="_blank" rel="noopener noreferrer"
-                       className="btn cursor-target text-[10px] md:text-[11px] font-bold uppercase tracking-tighter">
+                       className="btn cursor-target text-[10px] md:text-[11px] font-bold uppercase tracking-tighter"
+                       data-cursor-text="Open">
                       live demo
                     </a>
                   )}
                   {project.codeUrl && (
                     <a href={project.codeUrl} target="_blank" rel="noopener noreferrer"
-                       className="btn cursor-target text-[10px] md:text-[11px] font-bold uppercase tracking-tighter">
+                       className="btn cursor-target text-[10px] md:text-[11px] font-bold uppercase tracking-tighter"
+                       data-cursor-text="GitHub">
                       view code
                     </a>
                   )}

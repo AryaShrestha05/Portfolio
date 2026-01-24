@@ -20,7 +20,9 @@ const Beyond = () => {
   ];
 
   useEffect(() => {
-    // Title entrance animation
+    let mm = gsap.matchMedia();
+
+    // Title entrance animation (same for all screen sizes)
     gsap.fromTo(
       [beyondTheRef.current, classroomRef.current],
       { opacity: 0 },
@@ -34,21 +36,7 @@ const Beyond = () => {
       }
     );
 
-    // Parallax timeline for split title animation
-    const parallaxTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: 1,
-      },
-    });
-
-    parallaxTl
-      .fromTo(beyondTheRef.current, { x: 150 }, { x: -150, ease: "none" }, 0)
-      .fromTo(classroomRef.current, { x: -150 }, { x: 150, ease: "none" }, 0);
-
-    // Reveal animation for photos
+    // Reveal animation for photos (same for all screen sizes)
     gsap.fromTo(
       photoRefs.current,
       { opacity: 0, y: 40 },
@@ -65,7 +53,39 @@ const Beyond = () => {
       }
     );
 
-    return () => ScrollTrigger.getAll().forEach(t => t.kill());
+    mm.add("(min-width: 1024px)", () => {
+      // Desktop parallax
+      const parallaxTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+
+      parallaxTl
+        .fromTo(beyondTheRef.current, { x: 150 }, { x: -150, ease: "none" }, 0)
+        .fromTo(classroomRef.current, { x: -150 }, { x: 150, ease: "none" }, 0);
+    });
+
+    mm.add("(max-width: 1023px)", () => {
+      // Mobile/tablet parallax - reduced movement
+      const parallaxTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+
+      parallaxTl
+        .fromTo(beyondTheRef.current, { x: 50 }, { x: -50, ease: "none" }, 0)
+        .fromTo(classroomRef.current, { x: -50 }, { x: 50, ease: "none" }, 0);
+    });
+
+    return () => mm.revert();
   }, []);
 
   return (
@@ -76,10 +96,10 @@ const Beyond = () => {
     >
       {/* Split Title with parallax - full width */}
       <div className="w-full flex flex-col items-center mb-12 md:mb-16 select-none pointer-events-none">
-        <h2 ref={beyondTheRef} className="section-title text-6xl sm:text-7xl md:text-9xl !leading-[0.7]">
+        <h2 ref={beyondTheRef} className="section-title text-5xl sm:text-6xl md:text-7xl lg:text-9xl !leading-[0.7]">
           beyond
         </h2>
-        <h2 ref={classroomRef} className="section-title text-6xl sm:text-7xl md:text-9xl mt-3 md:mt-5 !leading-[0.9]">
+        <h2 ref={classroomRef} className="section-title text-5xl sm:text-6xl md:text-7xl lg:text-9xl mt-3 lg:mt-5 !leading-[0.9]">
           classroom
         </h2>
       </div>

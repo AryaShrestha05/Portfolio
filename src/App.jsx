@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   GooeyNav,
   TargetCursor,
+  SmokeyCursor,
   StartScreen,
   About,
   Experience,
@@ -38,6 +39,20 @@ function App() {
 
       {/* 3. Custom Snapping Cursor - Hidden if loading */}
       {!loading && <TargetCursor />}
+
+      {/* 3b. Smoke Effect following cursor */}
+      {!loading && (
+        <SmokeyCursor
+          simulationResolution={128}
+          dyeResolution={1024}
+          densityDissipation={4}
+          velocityDissipation={2.5}
+          curl={2}
+          splatRadius={0.15}
+          splatForce={3000}
+          colorUpdateSpeed={5}
+        />
+      )}
 
       {/* 4. Background Layer */}
       <div

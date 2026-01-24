@@ -22,6 +22,8 @@ const Contacts = () => {
   ];
 
   useEffect(() => {
+    let mm = gsap.matchMedia();
+
     // Title entrance animation
     gsap.fromTo(
       [letsRef.current, connectRef.current],
@@ -36,19 +38,37 @@ const Contacts = () => {
       }
     );
 
-    // Parallax timeline for split title animation
-    const parallaxTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: 1,
-      },
+    mm.add("(min-width: 1024px)", () => {
+      // Desktop parallax
+      const parallaxTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+
+      parallaxTl
+        .fromTo(letsRef.current, { x: 150 }, { x: -150, ease: "none" }, 0)
+        .fromTo(connectRef.current, { x: -150 }, { x: 150, ease: "none" }, 0);
     });
 
-    parallaxTl
-      .fromTo(letsRef.current, { x: 150 }, { x: -150, ease: "none" }, 0)
-      .fromTo(connectRef.current, { x: -150 }, { x: 150, ease: "none" }, 0);
+    mm.add("(max-width: 1023px)", () => {
+      // Mobile/tablet parallax - reduced movement
+      const parallaxTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+
+      parallaxTl
+        .fromTo(letsRef.current, { x: 50 }, { x: -50, ease: "none" }, 0)
+        .fromTo(connectRef.current, { x: -50 }, { x: 50, ease: "none" }, 0);
+    });
 
     // Links animation - each icon comes from a different direction
     const directions = [
@@ -121,7 +141,7 @@ const Contacts = () => {
       }
     );
 
-    return () => ScrollTrigger.getAll().forEach(t => t.kill());
+    return () => mm.revert();
   }, []);
 
   return (
@@ -132,10 +152,10 @@ const Contacts = () => {
     >
       {/* Split Title with parallax */}
       <div className="w-full flex flex-col items-center mb-16 md:mb-20 select-none pointer-events-none">
-        <h2 ref={letsRef} className="section-title text-6xl sm:text-7xl md:text-9xl !leading-[0.9]">
+        <h2 ref={letsRef} className="section-title text-5xl sm:text-6xl md:text-7xl lg:text-9xl !leading-[0.9]">
           let's
         </h2>
-        <h2 ref={connectRef} className="section-title text-6xl sm:text-7xl md:text-9xl mt-1 !leading-[0.9]">
+        <h2 ref={connectRef} className="section-title text-5xl sm:text-6xl md:text-7xl lg:text-9xl mt-1 !leading-[0.9]">
           connect!
         </h2>
       </div>
