@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo, useCallback, useState } from 'react';
+import { useEffect, useRef, useMemo, useCallback } from 'react';
 import gsap from 'gsap';
 import './TargetCursor.css';
 
@@ -11,7 +11,6 @@ const TargetCursor = ({
   const dotRef = useRef(null);
   const ringRef = useRef(null);
   const glowRef = useRef(null);
-  const textRef = useRef(null);
   const trailsRef = useRef([]);
   const isVisibleRef = useRef(isVisible);
   const activeTargetRef = useRef(null);
@@ -20,7 +19,6 @@ const TargetCursor = ({
   const targetPosRef = useRef({ x: 0, y: 0 });
   const isClickingRef = useRef(false);
   const rafRef = useRef(null);
-  const [hoverText, setHoverText] = useState('');
 
   const isMobile = useMemo(() => {
     if (typeof window === 'undefined') return false;
@@ -140,10 +138,6 @@ const TargetCursor = ({
     const w = rect.width + padding;
     const finalRadius = `${h / 2}px`;
 
-    // Get hover text from data attribute
-    const text = target.dataset.cursorText || target.getAttribute('aria-label') || '';
-    setHoverText(text);
-
     if (ringRef.current) {
       ringRef.current.classList.add('is-hovering');
 
@@ -159,36 +153,32 @@ const TargetCursor = ({
 
     if (dotRef.current) {
       gsap.to(dotRef.current, {
-        scale: 0,
-        duration: 0.3,
-        ease: "power2.out",
-      });
-    }
-
-    if (textRef.current && text) {
-      gsap.to(textRef.current, {
         opacity: 1,
         scale: 1,
         duration: 0.3,
-        delay: 0.1,
         ease: "power2.out",
       });
     }
   }, [targetSelector]);
 
   const handleMouseLeave = useCallback((e) => {
-    const target = e.target.closest(targetSelector);
-    if (!target) return;
+    // If there's no active target, nothing to reset
+    if (!activeTargetRef.current) return;
+
+    // Check if we're still inside the active target (mouse moved to child element)
+    const relatedTarget = e.relatedTarget;
+    if (relatedTarget && activeTargetRef.current.contains(relatedTarget)) {
+      return; // Still inside the target, don't reset
+    }
 
     activeTargetRef.current = null;
-    setHoverText('');
 
     if (ringRef.current) {
       ringRef.current.classList.remove('is-hovering');
 
       gsap.to(ringRef.current, {
-        width: 40,
-        height: 40,
+        width: 20,
+        height: 20,
         borderRadius: "50%",
         duration: 0.4,
         ease: "elastic.out(1, 0.6)",
@@ -197,16 +187,8 @@ const TargetCursor = ({
 
     if (dotRef.current) {
       gsap.to(dotRef.current, {
-        scale: 1,
-        duration: 0.4,
-        ease: "elastic.out(1, 0.5)",
-      });
-    }
-
-    if (textRef.current) {
-      gsap.to(textRef.current, {
         opacity: 0,
-        scale: 0.8,
+        scale: 0.5,
         duration: 0.2,
         ease: "power2.in",
       });
@@ -297,10 +279,7 @@ const TargetCursor = ({
       <div ref={glowRef} className="cursor-glow" />
 
       {/* Main ring */}
-      <div ref={ringRef} className="cursor-ring">
-        {/* Hover text */}
-        <span ref={textRef} className="cursor-text">{hoverText}</span>
-      </div>
+      <div ref={ringRef} className="cursor-ring" />
 
       {/* Center dot */}
       <div ref={dotRef} className="cursor-dot" />
