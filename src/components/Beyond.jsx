@@ -109,7 +109,7 @@ const Beyond = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
           {photoData.map((item, i) => (
             <div
-              key={i}
+              key={item.desc}
               ref={el => photoRefs.current[i] = el}
               className="group relative aspect-square overflow-hidden cursor-pointer rounded-xl md:rounded-2xl border border-border"
             >
@@ -121,7 +121,9 @@ const Beyond = () => {
                   className="w-full h-full object-cover bg-muted transition-all duration-500 group-hover:scale-110"
                 />
               ) : (
-                <div className="w-full h-full bg-muted" />
+                <div className="w-full h-full bg-muted/50 flex items-center justify-center">
+                  <span className="text-muted-foreground/50 text-xs uppercase tracking-widest">{item.desc}</span>
+                </div>
               )}
 
               {/* Overlay with Description - visible on mobile, hover on desktop */}

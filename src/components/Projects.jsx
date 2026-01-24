@@ -151,8 +151,8 @@ const Projects = () => {
       ],
       tags: ["React", "Flask", "OpenCV", "MediaPipe"],
       gif: posturizePreview,
-      liveUrl: "#",
-      codeUrl: "#"
+      liveUrl: "https://posturize-beta.vercel.app/",
+      codeUrl: "https://github.com/AryaShrestha05/posturize"
     },
     {
       title: "grab a mojito",

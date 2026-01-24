@@ -252,7 +252,7 @@ const GooeyNav = ({
         <nav>
           <ul ref={navRef} className="flex items-center">
             {items.map((item, index) => (
-              <li key={index} className={activeIndex === index ? 'active' : ''} onClick={e => handleClick(e, index)}>
+              <li key={item.label} className={activeIndex === index ? 'active' : ''} onClick={e => handleClick(e, index)}>
                 <a
                   href={item.href}
                   className="cursor-target"

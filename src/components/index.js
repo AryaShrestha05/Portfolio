@@ -28,3 +28,4 @@ export { default as RotatingText } from './RotatingText';
 export { default as Preloader } from './Preloader';
 export { default as ResumeModal } from './ResumeModal';
 export { default as StarColorPicker } from './StarColorPicker';
+export { default as ErrorBoundary } from './ErrorBoundary';

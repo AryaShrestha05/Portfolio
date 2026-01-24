@@ -195,7 +195,7 @@ export default function SmokeyCursor({
       gl.shaderSource(shader, shaderSource);
       gl.compileShader(shader);
       if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.trace(gl.getShaderInfoLog(shader));
+        console.warn("Shader compile error:", gl.getShaderInfoLog(shader));
       }
       return shader;
     }
@@ -208,7 +208,7 @@ export default function SmokeyCursor({
       gl.attachShader(program, fragmentShader);
       gl.linkProgram(program);
       if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        console.trace(gl.getProgramInfoLog(program));
+        console.warn("Program link error:", gl.getProgramInfoLog(program));
       }
       return program;
     }
