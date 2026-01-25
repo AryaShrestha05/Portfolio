@@ -11,6 +11,26 @@ const ResumeModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isOpen) {
+      // Reset cursor immediately when modal opens to prevent stuck state
+      const cursorRing = document.querySelector('.cursor-ring');
+      if (cursorRing) {
+        cursorRing.classList.remove('is-hovering');
+        gsap.killTweensOf(cursorRing);
+        gsap.set(cursorRing, {
+          width: 20,
+          height: 20,
+          borderRadius: "50%",
+        });
+      }
+      const cursorDot = document.querySelector('.cursor-dot');
+      if (cursorDot) {
+        gsap.killTweensOf(cursorDot);
+        gsap.set(cursorDot, {
+          opacity: 0,
+          scale: 0.5,
+        });
+      }
+
       // 1. Capture current scroll position
       scrollOffset.current = window.scrollY;
 
@@ -42,6 +62,26 @@ const ResumeModal = ({ isOpen, onClose }) => {
   }, [isOpen]);
 
   const handleClose = () => {
+    // Reset cursor when closing modal
+    const cursorRing = document.querySelector('.cursor-ring');
+    if (cursorRing) {
+      cursorRing.classList.remove('is-hovering');
+      gsap.killTweensOf(cursorRing);
+      gsap.set(cursorRing, {
+        width: 20,
+        height: 20,
+        borderRadius: "50%",
+      });
+    }
+    const cursorDot = document.querySelector('.cursor-dot');
+    if (cursorDot) {
+      gsap.killTweensOf(cursorDot);
+      gsap.set(cursorDot, {
+        opacity: 0,
+        scale: 0.5,
+      });
+    }
+
     gsap.to(modalRef.current, {
       opacity: 0,
       y: 30,

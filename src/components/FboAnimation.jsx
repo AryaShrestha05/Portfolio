@@ -11,13 +11,14 @@ const vertexShader = `
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
     gl_Position = projectionMatrix * mvPosition;
     gl_PointSize = size * (300.0 / -mvPosition.z);
-    vOpacity = 0.6 + 0.4 * (size / 0.08);
+    vOpacity = 0.4 + 0.3 * (size / 0.08);
   }
 `;
 
 // Fragment shader for round star-like particles with soft glow
 const fragmentShader = `
   uniform vec3 uColor;
+  uniform float uOpacityMultiplier;
   varying float vOpacity;
 
   void main() {
@@ -30,6 +31,7 @@ const fragmentShader = `
     // Soft circular falloff for star-like glow
     float alpha = 1.0 - smoothstep(0.0, 0.5, dist);
     alpha *= vOpacity;
+    alpha *= uOpacityMultiplier;
 
     gl_FragColor = vec4(uColor, alpha);
   }
@@ -56,7 +58,7 @@ const RotatingScene = ({ children, mousePos }) => {
 const Particles = ({ isDarkMode, customColor }) => {
   const meshRef = useRef();
   const materialRef = useRef();
-  const count = 5000;
+  const count = isDarkMode ? 5000 : 3500; // Visible but not overwhelming in light mode
 
   // Generate random positions in a sphere with hollow center
   const { positions, sizes } = useMemo(() => {
@@ -81,10 +83,11 @@ const Particles = ({ isDarkMode, customColor }) => {
     return { positions: pos, sizes: sizeArr };
   }, []);
 
-  // Match theme: muted-foreground colors for subtle contrast
-  // Dark mode: #a3a3a3 (muted gray), Light mode: #4b5563 (muted slate)
+  // Match theme: subtle but visible particles
+  // Dark mode: #a3a3a3 (muted gray), Light mode: #c0c0c0 (light gray, visible but subtle)
   const uniforms = useRef({
-    uColor: { value: new THREE.Color(isDarkMode ? 0xa3a3a3 : 0xd1d5db) }
+    uColor: { value: new THREE.Color(isDarkMode ? 0xa3a3a3 : 0xc0c0c0) },
+    uOpacityMultiplier: { value: isDarkMode ? 1.0 : 0.35 }
   });
 
   // Update color when mode or custom color changes
@@ -92,8 +95,10 @@ const Particles = ({ isDarkMode, customColor }) => {
     if (materialRef.current) {
       if (customColor) {
         materialRef.current.uniforms.uColor.value.set(customColor);
+        materialRef.current.uniforms.uOpacityMultiplier.value = isDarkMode ? 1.0 : 0.35;
       } else {
-        materialRef.current.uniforms.uColor.value.set(isDarkMode ? 0xa3a3a3 : 0xd1d5db);
+        materialRef.current.uniforms.uColor.value.set(isDarkMode ? 0xa3a3a3 : 0xc0c0c0);
+        materialRef.current.uniforms.uOpacityMultiplier.value = isDarkMode ? 1.0 : 0.35;
       }
     }
   }, [isDarkMode, customColor]);
@@ -128,7 +133,7 @@ const Particles = ({ isDarkMode, customColor }) => {
         uniforms={uniforms.current}
         transparent
         depthWrite={false}
-        blending={THREE.AdditiveBlending}
+        blending={isDarkMode ? THREE.AdditiveBlending : THREE.NormalBlending}
       />
     </points>
   );

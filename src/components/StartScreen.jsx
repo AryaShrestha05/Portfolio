@@ -127,8 +127,7 @@ const StartScreen = () => {
       {/* CTA Button */}
       <button
         ref={btnRef}
-        className="btn-outline text-xl sm:text-2xl mt-8 font-primary cursor-target"
-        data-cursor-text="View"
+        className="btn-outline text-xl sm:text-2xl mt-8 font-primary"
         style={{ fontFamily: 'var(--font-primary)' }}
         onClick={() => setIsResumeOpen(true)}
       >

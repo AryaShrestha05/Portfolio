@@ -22,12 +22,12 @@
   left: 0;
   width: 6px;
   height: 6px;
-  background: var(--color-foreground, #fff);
+  background: var(--color-foreground, #4a4a4a);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 99999;
-  mix-blend-mode: difference;
+  mix-blend-mode: normal;
   will-change: transform, opacity;
 
   /* Hidden by default */
@@ -49,14 +49,14 @@
   transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 99998;
-  mix-blend-mode: difference;
+  mix-blend-mode: normal;
   will-change: transform, width, height, border-radius;
   display: flex;
   align-items: center;
   justify-content: center;
 
   /* Filled background by default */
-  background: var(--color-foreground, #fff);
+  background: var(--color-foreground, #4a4a4a);
 
   /* Smooth transitions for non-animated properties */
   transition:
@@ -68,15 +68,15 @@
 
 /* Hover state */
 .cursor-ring.is-hovering {
-  border: 5px solid var(--color-foreground, #fff);
-  background: rgba(255, 255, 255, 0.1);
+  border: 5px solid var(--color-foreground, #4a4a4a);
+  background: rgba(74, 74, 74, 0.1);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
 
-  box-shadow:
-    0 0 20px rgba(255, 255, 255, 0.15),
-    0 0 40px rgba(255, 255, 255, 0.1),
-    inset 0 0 20px rgba(255, 255, 255, 0.05);
+    box-shadow:
+    0 0 20px rgba(74, 74, 74, 0.15),
+    0 0 40px rgba(74, 74, 74, 0.08),
+    inset 0 0 20px rgba(74, 74, 74, 0.05);
 }
 
 /* ========================================
@@ -97,13 +97,13 @@
 
   background: radial-gradient(
     circle,
-    rgba(255, 255, 255, 0.15) 0%,
-    rgba(255, 255, 255, 0.05) 40%,
+    rgba(74, 74, 74, 0.1) 0%,
+    rgba(74, 74, 74, 0.03) 40%,
     transparent 70%
   );
 
   filter: blur(10px);
-  mix-blend-mode: overlay;
+  mix-blend-mode: normal;
 }
 
 /* ========================================
@@ -113,26 +113,60 @@
   position: fixed;
   width: 40px;
   height: 40px;
-  border: 2px solid var(--color-foreground, #fff);
+  border: 2px solid var(--color-foreground, #4a4a4a);
   border-radius: 50%;
   transform: translate(-50%, -50%) scale(0);
   pointer-events: none;
   z-index: 99996;
-  mix-blend-mode: difference;
+  mix-blend-mode: normal;
   opacity: 0.6;
+}
+
+/* ========================================
+   LIGHT MODE ADJUSTMENTS
+   ======================================== */
+:root:not(.dark) .cursor-dot {
+  box-shadow:
+    0 0 10px rgba(74, 74, 74, 0.4),
+    0 0 20px rgba(74, 74, 74, 0.25),
+    0 0 30px rgba(74, 74, 74, 0.15);
+}
+
+:root:not(.dark) .cursor-ring.is-hovering {
+  box-shadow:
+    0 0 20px rgba(74, 74, 74, 0.2),
+    0 0 40px rgba(74, 74, 74, 0.12),
+    inset 0 0 20px rgba(74, 74, 74, 0.08);
+  border-color: var(--color-foreground, #4a4a4a);
+  background: rgba(74, 74, 74, 0.05);
+}
+
+:root:not(.dark) .cursor-glow {
+  background: radial-gradient(
+    circle,
+    rgba(74, 74, 74, 0.1) 0%,
+    rgba(74, 74, 74, 0.03) 40%,
+    transparent 70%
+  );
 }
 
 /* ========================================
    DARK MODE ADJUSTMENTS
    ======================================== */
 .dark .cursor-dot {
+  mix-blend-mode: difference;
   box-shadow:
     0 0 15px rgba(255, 255, 255, 0.9),
     0 0 30px rgba(255, 255, 255, 0.5),
     0 0 45px rgba(255, 255, 255, 0.3);
 }
 
+.dark .cursor-ring {
+  mix-blend-mode: difference;
+}
+
 .dark .cursor-ring.is-hovering {
+  mix-blend-mode: difference;
   box-shadow:
     0 0 25px rgba(255, 255, 255, 0.2),
     0 0 50px rgba(255, 255, 255, 0.15),
@@ -140,12 +174,17 @@
 }
 
 .dark .cursor-glow {
+  mix-blend-mode: overlay;
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0.2) 0%,
     rgba(255, 255, 255, 0.08) 40%,
     transparent 70%
   );
+}
+
+.dark .cursor-ripple {
+  mix-blend-mode: difference;
 }
 
 /* ========================================

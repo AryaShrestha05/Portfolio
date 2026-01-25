@@ -25,7 +25,7 @@ const Experience = () => {
     mm.add("(min-width: 1024px)", () => {
       // Desktop animations
       gsap.fromTo(
-        [experienceTextRef.current, sliderRef.current],
+        experienceTextRef.current,
         { opacity: 0, y: 30 },
         {
           opacity: 1,
@@ -38,6 +38,9 @@ const Experience = () => {
           }
         }
       );
+      
+      // Set slider to be visible from the start
+      gsap.set(sliderRef.current, { opacity: 1, y: 0 });
 
       gsap.fromTo(
         experienceTextRef.current,
@@ -70,7 +73,7 @@ const Experience = () => {
         ease: "none",
       });
 
-      gsap.set(cards, { scale: 0.6, opacity: 0 });
+      gsap.set(cards, { scale: 0.6, opacity: 1 });
 
       cards.forEach((card) => {
         gsap.timeline({
@@ -83,14 +86,14 @@ const Experience = () => {
           }
         })
           .to(card, { opacity: 1, scale: 0.85, ease: "power2.inOut" })
-          .to(card, { opacity: 0, scale: 0.6, ease: "power2.inOut" });
+          .to(card, { opacity: 1, scale: 0.6, ease: "power2.inOut" });
       });
     });
 
     mm.add("(max-width: 1023px)", () => {
       // Mobile animations - same as desktop but adjusted
       gsap.fromTo(
-        [experienceTextRef.current, sliderRef.current],
+        experienceTextRef.current,
         { opacity: 0, y: 20 },
         {
           opacity: 1,
@@ -103,6 +106,9 @@ const Experience = () => {
           }
         }
       );
+      
+      // Set slider to be visible from the start
+      gsap.set(sliderRef.current, { opacity: 1, y: 0 });
 
       gsap.fromTo(
         experienceTextRef.current,
@@ -137,7 +143,7 @@ const Experience = () => {
       });
 
       // Mobile: Start with higher scale
-      gsap.set(cards, { scale: 0.8, opacity: 0 });
+      gsap.set(cards, { scale: 0.8, opacity: 1 });
 
       cards.forEach((card) => {
         gsap.timeline({
@@ -150,7 +156,7 @@ const Experience = () => {
           }
         })
           .to(card, { opacity: 1, scale: 0.95, ease: "power2.inOut" })
-          .to(card, { opacity: 0, scale: 0.8, ease: "power2.inOut" });
+          .to(card, { opacity: 1, scale: 0.8, ease: "power2.inOut" });
       });
     });
 

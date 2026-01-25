@@ -23,10 +23,10 @@
       0.995 68%,
       1.001 85%,
       1);
-  --color-1: rgba(0, 0, 0, 0.5);
-  --color-2: rgba(0, 0, 0, 0.4);
-  --color-3: rgba(0, 0, 0, 0.6);
-  --color-4: rgba(0, 0, 0, 0.45);
+  --color-1: rgba(74, 74, 74, 0.5);
+  --color-2: rgba(74, 74, 74, 0.4);
+  --color-3: rgba(74, 74, 74, 0.6);
+  --color-4: rgba(74, 74, 74, 0.45);
 }
 
 .gooey-nav-container {
@@ -47,7 +47,7 @@
   margin: 0;
   position: relative;
   z-index: 3;
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(74, 74, 74, 0.5);
 }
 
 .gooey-nav-container nav ul li {
@@ -74,7 +74,7 @@
 }
 
 .gooey-nav-container nav ul li:focus-within:has(:focus-visible) {
-  box-shadow: 0 0 0.5px 1.5px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0.5px 1.5px rgba(74, 74, 74, 0.5);
 }
 
 .gooey-nav-container nav ul li::after {
@@ -90,7 +90,7 @@
 }
 
 .gooey-nav-container nav ul li.active {
-  color: rgba(0, 0, 0, 0.8);
+  color: rgba(74, 74, 74, 0.8);
 }
 
 .gooey-nav-container nav ul li.active::after {
@@ -112,7 +112,7 @@
 }
 
 .gooey-nav-container .effect.text {
-  color: rgba(0, 0, 0, 0.5);
+  color: rgba(74, 74, 74, 0.5);
   transition: color 0.3s ease;
   font-family: 'Georgia', 'Times New Roman', serif;
   font-weight: 400;
@@ -122,7 +122,7 @@
 }
 
 .gooey-nav-container .effect.text.active {
-  color: rgba(0, 0, 0, 0.8);
+  color: rgba(74, 74, 74, 0.8);
 }
 
 .gooey-nav-container .effect.filter {
@@ -248,7 +248,7 @@
   left: 50%;
   transform: translateX(-50%);
   height: 3px;
-  background-color: #000000;
+  background-color: #4a4a4a;
   transition: width 0.1s linear;
   z-index: 100;
 
