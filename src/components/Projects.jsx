@@ -146,9 +146,9 @@ const Projects = () => {
       title: "distributed rate limiter",
       subtitle: "distributed systems // jan 2026",
       description: [
-        "distributed rate limiting system with redis for consistent enforcement across multiple servers",
-        "containerized microservices with docker and nginx load balancing for horizontal scalability",
-        "full-stack observability dashboard with real-time visualization using react and express"
+        "distributed rate limiting with redis for consistent multi-server enforcement",
+        "containerized microservices with docker and nginx for horizontal scaling",
+        "real-time observability dashboard with react and express"
       ],
       tags: ["JavaScript", "Redis", "Nginx", "Docker", "React", "Express"],
       gif: rateLimiterPreview,

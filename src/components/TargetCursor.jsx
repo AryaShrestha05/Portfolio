@@ -104,12 +104,12 @@ const TargetCursor = ({
     const prevX = pos.x;
     const prevY = pos.y;
 
-    // Spring physics for smooth following - more noticeable lag and bounce
-    const springStrength = 0.1;
-    const damping = 0.68;
+    // Spring physics for smooth following - subtle lag and bounce
+    const springStrength = 0.15;
+    const damping = 0.75;
 
     // Dot follows faster
-    const dotSpring = 0.2;
+    const dotSpring = 0.25;
 
     // Update velocity with spring physics
     velocityRef.current.x += (target.x - pos.x) * springStrength;
@@ -129,11 +129,11 @@ const TargetCursor = ({
     // Calculate angle for rotation (only when not hovering)
     const angle = Math.atan2(velocityRef.current.y, velocityRef.current.x) * (180 / Math.PI);
 
-    // Scale based on velocity (stretch effect) - more pronounced
-    const maxStretch = 2.0;
-    const stretchAmount = Math.min(speed / 6, maxStretch - 1);
-    const scaleX = 1 + stretchAmount * 0.7;
-    const scaleY = 1 - stretchAmount * 0.3;
+    // Scale based on velocity (stretch effect) - subtle
+    const maxStretch = 1.6;
+    const stretchAmount = Math.min(speed / 8, maxStretch - 1);
+    const scaleX = 1 + stretchAmount * 0.5;
+    const scaleY = 1 - stretchAmount * 0.2;
 
     // Apply transforms to ring (outer, follows with delay)
     // Rotation only when freely moving, NOT when hovering on buttons
