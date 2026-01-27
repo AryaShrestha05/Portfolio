@@ -5,6 +5,7 @@ import llaPreview from '../assets/projectPreviews/llaPreview.gif';
 import posturizePreview from '../assets/projectPreviews/posturizePreview.gif';
 import regressionPreview from '../assets/projectPreviews/regressionModel.png';
 import mojitoPreview from '../assets/projectPreviews/mojitoPreview.gif';
+import rateLimiterPreview from '../assets/projectPreviews/rateLimiterPreview.gif';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -142,6 +143,19 @@ const Projects = () => {
       codeUrl: "https://github.com/AryaShrestha05/legacylouisiana"
     },
     {
+      title: "distributed rate limiter",
+      subtitle: "distributed systems // jan 2026",
+      description: [
+        "distributed rate limiting system with redis for consistent enforcement across multiple servers",
+        "containerized microservices with docker and nginx load balancing for horizontal scalability",
+        "full-stack observability dashboard with real-time visualization using react and express"
+      ],
+      tags: ["JavaScript", "Redis", "Nginx", "Docker", "React", "Express"],
+      gif: rateLimiterPreview,
+      codeUrl: "https://github.com/AryaShrestha05/rateLimiter",
+      imageScale: 1.25
+    },
+    {
       title: "posturize",
       subtitle: "hackprinceton // nov 2025",
       description: [
@@ -194,7 +208,7 @@ const Projects = () => {
             <div key={project.title} ref={el => cardsRef.current[index] = el} className="glass-card p-5 sm:p-6 md:p-8 flex flex-col md:flex-row gap-5 md:gap-8">
               <div className="md:w-2/5 flex-shrink-0 flex flex-col">
                 <div className="aspect-video w-full rounded-xl md:rounded-2xl overflow-hidden border border-border bg-muted">
-                  <img src={project.gif} alt={project.title} className="w-full h-full object-cover" />
+                  <img src={project.gif} alt={project.title} className="w-full h-full object-cover" style={project.imageScale ? { transform: `scale(${project.imageScale})` } : undefined} />
                 </div>
                 <div className="flex flex-wrap gap-2 md:gap-3 mt-3 md:mt-4">
                   {project.liveUrl && (
