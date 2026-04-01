@@ -2,6 +2,13 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+import basketballImg from '../assets/beyond/basketball.JPG';
+import hackathronImg from '../assets/beyond/hackathron.JPG';
+import gymImg from '../assets/beyond/gym.JPG';
+import foodImg from '../assets/beyond/food.JPG';
+import nepalImg from '../assets/beyond/nepal.HEIC?url';
+import octaneImg from '../assets/beyond/octane.png';
+
 gsap.registerPlugin(ScrollTrigger);
 
 const Beyond = () => {
@@ -11,12 +18,12 @@ const Beyond = () => {
   const photoRefs = useRef([]);
 
   const photoData = [
-    { src: "", desc: "Basketball" },
-    { src: "", desc: "Hackathons" },
-    { src: "", desc: "Gym" },
-    { src: "", desc: "Food" },
-    { src: "", desc: "Nepal" },
-    { src: "", desc: "Music" },
+    { src: basketballImg, desc: 'Basketball' },
+    { src: hackathronImg, desc: 'Hackathons' },
+    { src: gymImg, desc: 'Gym' },
+    { src: foodImg, desc: 'Food' },
+    { src: nepalImg, desc: 'Nepal' },
+    { src: octaneImg, desc: 'Octane' },
   ];
 
   useEffect(() => {
