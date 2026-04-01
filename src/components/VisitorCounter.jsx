@@ -76,18 +76,18 @@ export default function VisitorCounter() {
 
   return (
     <div
-      className="fixed bottom-4 left-4 z-[45] max-w-[min(100vw-2rem,14rem)] pointer-events-none select-none"
+      className="fixed bottom-4 left-4 z-[45] max-w-[min(100vw-2rem,18rem)] pointer-events-none select-none"
       aria-live="polite"
     >
-      <p className="font-sans text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-muted-foreground leading-snug">
+      <p className="font-sans text-[9px] sm:text-[10px] text-muted-foreground leading-snug normal-case tracking-normal">
         {failed ? (
-          <span className="opacity-60">visits unavailable</span>
+          <span className="opacity-60">Counter unavailable</span>
         ) : count === null ? (
-          <span className="opacity-60">visits …</span>
+          <span className="opacity-60">Loading…</span>
         ) : (
           <>
-            <span className="text-foreground/90 font-medium tabular-nums">{count.toLocaleString()}</span>{' '}
-            <span className="opacity-80">visits</span>
+            <span className="text-foreground/90 font-semibold tabular-nums">{count.toLocaleString()}</span>{' '}
+            <span className="opacity-90">people viewed this site!</span>
           </>
         )}
       </p>
