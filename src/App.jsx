@@ -11,7 +11,8 @@ import {
   Contacts,
   FboAnimation,
   Preloader,
-  StarColorPicker
+  StarColorPicker,
+  VisitorCounter
 } from "./components";
 
 function App() {
@@ -64,6 +65,9 @@ function App() {
 
       {/* 5. Star Color Picker */}
       {!loading && <StarColorPicker onColorChange={setStarColor} />}
+
+      {/* Visitor count (bottom left) */}
+      <VisitorCounter />
 
       {/* 6. UI Layer */}
       <div className={`relative z-10 transition-opacity duration-1000 ${loading ? 'opacity-0' : 'opacity-100'}`}>
