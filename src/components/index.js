@@ -17,10 +17,12 @@ export { default as Contacts } from './Contacts';
 export { default as GooeyNav } from './GooeyNav';
 
 // Visual Effects
-export { default as FboAnimation } from './FboAnimation';
+// FboAnimation and SmokeyCursor are deliberately NOT re-exported here.
+// Both are heavy WebGL leaves (FboAnimation pulls in three.js), so App.jsx
+// loads them with React.lazy to keep them out of the initial chunk. Adding
+// them back to this barrel would drag three.js into the main bundle again.
 export { default as GlassSurface } from './GlassSurface';
 export { default as TargetCursor } from './TargetCursor';
-export { default as SmokeyCursor } from './ui/smokey-cursor';
 
 // UI Components
 export { default as AnimatedThemeSwitcher } from './AnimatedThemeSwitcher';

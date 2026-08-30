@@ -2,11 +2,14 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+import { MQ, SCRUB, EASE_SOFT, DURATION, DURATION_FAST, STAGGER } from '../lib/motion';
+
 import basketballImg from '../assets/beyond/basketball.JPG';
 import hackathronImg from '../assets/beyond/hackathron.JPG';
 import gymImg from '../assets/beyond/gym.JPG';
 import foodImg from '../assets/beyond/food.JPG';
-import nepalImg from '../assets/beyond/nepal.HEIC?url';
+// Re-encoded from HEIC, which only Safari can decode.
+import nepalImg from '../assets/beyond/nepal.jpg';
 import octaneImg from '../assets/beyond/octane.png';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -27,69 +30,55 @@ const Beyond = () => {
   ];
 
   useEffect(() => {
-    let mm = gsap.matchMedia();
+    const mm = gsap.matchMedia();
 
-    // Title entrance animation (same for all screen sizes)
-    gsap.fromTo(
-      [beyondTheRef.current, classroomRef.current],
-      { opacity: 0 },
-      {
-        opacity: 1,
-        duration: 1,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-        }
+    mm.add(MQ, (context) => {
+      const { isDesktop, reduce } = context.conditions;
+      const photos = photoRefs.current.filter(Boolean);
+      const titles = [beyondTheRef.current, classroomRef.current];
+
+      if (reduce) {
+        gsap.set([...titles, ...photos], { clearProps: 'all' });
+        return;
       }
-    );
 
-    // Reveal animation for photos (same for all screen sizes)
-    gsap.fromTo(
-      photoRefs.current,
-      { opacity: 0, y: 40 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        stagger: 0.1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 75%",
+      gsap.fromTo(
+        titles,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: DURATION,
+          ease: EASE_SOFT,
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
         }
-      }
-    );
+      );
 
-    mm.add("(min-width: 1024px)", () => {
-      // Desktop parallax
-      const parallaxTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
+      // Photos rise in reading order so the grid assembles rather than blinks.
+      gsap.fromTo(
+        photos,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: DURATION_FAST,
+          stagger: STAGGER,
+          ease: EASE_SOFT,
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 75%' },
+        }
+      );
 
-      parallaxTl
-        .fromTo(beyondTheRef.current, { x: 150 }, { x: -150, ease: "none" }, 0)
-        .fromTo(classroomRef.current, { x: -150 }, { x: 150, ease: "none" }, 0);
-    });
-
-    mm.add("(max-width: 1023px)", () => {
-      // Mobile/tablet parallax - reduced movement
-      const parallaxTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
-
-      parallaxTl
-        .fromTo(beyondTheRef.current, { x: 50 }, { x: -50, ease: "none" }, 0)
-        .fromTo(classroomRef.current, { x: -50 }, { x: 50, ease: "none" }, 0);
+      const drift = isDesktop ? 150 : 50;
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: SCRUB,
+          },
+        })
+        .fromTo(beyondTheRef.current, { x: drift }, { x: -drift, ease: 'none' }, 0)
+        .fromTo(classroomRef.current, { x: -drift }, { x: drift, ease: 'none' }, 0);
     });
 
     return () => mm.revert();
@@ -99,14 +88,14 @@ const Beyond = () => {
     <section
       ref={sectionRef}
       id="beyond"
-      className="min-h-screen py-20 md:py-32 flex flex-col items-center relative overflow-hidden"
+      className="min-h-[100dvh] py-20 md:py-32 flex flex-col items-center relative overflow-hidden"
     >
       {/* Split Title with parallax - full width */}
       <div className="w-full flex flex-col items-center mb-12 md:mb-16 select-none pointer-events-none">
-        <h2 ref={beyondTheRef} className="section-title text-5xl sm:text-6xl md:text-7xl lg:text-9xl !leading-[0.7]">
+        <h2 ref={beyondTheRef} className="section-title !leading-[0.7]">
           beyond
         </h2>
-        <h2 ref={classroomRef} className="section-title text-5xl sm:text-6xl md:text-7xl lg:text-9xl mt-3 lg:mt-5 !leading-[0.9]">
+        <h2 ref={classroomRef} className="section-title mt-3 lg:mt-5 !leading-[0.9]">
           classroom
         </h2>
       </div>
@@ -125,7 +114,9 @@ const Beyond = () => {
                 <img
                   src={item.src}
                   alt={item.desc}
-                  className="w-full h-full object-cover bg-muted transition-all duration-500 group-hover:scale-110"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover bg-muted transition-transform duration-[600ms] ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.08]"
                 />
               ) : (
                 <div className="w-full h-full bg-muted/50 flex items-center justify-center">

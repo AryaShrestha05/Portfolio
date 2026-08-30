@@ -24,6 +24,28 @@
 }
 
 /* ===========================================
+   MOTION SYSTEM
+   Single source of truth for easing and duration.
+   Mirrored in src/lib/motion.js for GSAP tweens so CSS transitions and
+   scroll animations share one feel.
+=========================================== */
+:root {
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --dur-fast: 180ms;
+  --dur-base: 320ms;
+  --dur-slow: 560ms;
+
+  /* SHAPE LOCK: one radius scale for the whole page.
+     Interactive controls are full-pill, surfaces are --radius-card,
+     nested media is --radius-inner. Nothing else. */
+  --radius-card: 1.5rem;
+  --radius-inner: 1rem;
+}
+
+/* ===========================================
    BASE LAYER - Theme Variables & Defaults
 =========================================== */
 @layer base {
@@ -58,8 +80,15 @@
     --shadow-card-hover: 0 12px 48px rgba(0, 0, 0, 0.7);
   }
 
+  /* Lenis owns scroll animation (see hooks/useSmoothScroll.js).
+     Native `scroll-behavior: smooth` would fight it for control of the
+     same anchor jump, so it is only re-enabled when Lenis is off. */
   html {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
   }
 
   html, body {
@@ -67,29 +96,44 @@
     overflow-x: hidden;
   }
 
+  /* Lenis runtime hooks. Without these the wheel feels "stuck" on trackpads. */
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: hidden; }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-primary);
-    transition: background-color 300ms ease, color 300ms ease;
+    transition: background-color var(--dur-slow) var(--ease-out-quart),
+                color var(--dur-slow) var(--ease-out-quart);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-primary);
     color: var(--color-foreground);
-    transition: color 300ms ease;
+    transition: color var(--dur-slow) var(--ease-out-quart);
+    /* Georgia has no thin cut, so large display sizes need the optical
+       tightening done manually rather than via font-weight. */
+    text-wrap: balance;
   }
 
   p, span, li {
     color: var(--color-foreground);
-    transition: color 300ms ease;
+    transition: color var(--dur-slow) var(--ease-out-quart);
+  }
+
+  p {
+    text-wrap: pretty;
   }
 
   a {
     color: var(--color-foreground);
-    transition: color 200ms ease, opacity 200ms ease;
+    transition: color var(--dur-base) var(--ease-out-quart),
+                opacity var(--dur-base) var(--ease-out-quart);
   }
 
   a:hover {
@@ -133,8 +177,12 @@
     }
   }
 
+  /* dvh, not vh. On iOS Safari the address bar collapsing mid-scroll
+     changes vh and jumps the hero. This is an ID selector, so it also
+     outranks any min-h utility set on the element in JSX. */
   #start-screen {
-    @apply relative z-10 min-h-screen w-full;
+    @apply relative z-10 w-full;
+    min-height: 100dvh;
   }
 
   /* Inner containers within cards */
@@ -147,15 +195,33 @@
   .btn {
     @apply px-6 py-2 rounded-full font-medium;
     font-family: var(--font-sans);
+    position: relative;
     border: 1px solid var(--color-border);
     background-color: var(--color-card);
     color: var(--color-foreground);
-    transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease, transform 200ms ease;
+    white-space: nowrap; /* CTA labels never wrap to a second line */
+    transition: background-color var(--dur-base) var(--ease-out-quart),
+                border-color var(--dur-base) var(--ease-out-quart),
+                color var(--dur-base) var(--ease-out-quart),
+                box-shadow var(--dur-base) var(--ease-out-quart),
+                transform var(--dur-fast) var(--ease-out-expo);
   }
 
   .btn:hover {
     background-color: var(--color-muted);
-    transform: translateY(-1px);
+    border-color: var(--color-muted-foreground);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(74, 74, 74, 0.12);
+  }
+
+  .dark .btn:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Tactile push. Simulates the button physically depressing. */
+  .btn:active {
+    transform: translateY(0) scale(0.97);
+    transition-duration: 80ms;
   }
 
   .btn-outline {
@@ -181,6 +247,26 @@
 
   .dark .btn-outline:hover {
     box-shadow: 0 0 25px rgba(255, 255, 255, 0.4), 0 0 50px rgba(255, 255, 255, 0.2);
+  }
+
+  .btn-outline:active {
+    transform: translateY(0) scale(0.98);
+    transition-duration: 80ms;
+  }
+
+  /* Tech tag pill. Shared by project cards so the scale stays consistent. */
+  .tag {
+    @apply text-[9px] md:text-[10px] uppercase tracking-widest px-2 md:px-3 py-1 rounded-full;
+    font-family: var(--font-sans);
+    border: 1px solid var(--color-border);
+    color: var(--color-muted-foreground);
+    transition: border-color var(--dur-base) var(--ease-out-quart),
+                color var(--dur-base) var(--ease-out-quart);
+  }
+
+  .glass-card:hover .tag {
+    border-color: var(--color-muted-foreground);
+    color: var(--color-foreground);
   }
 
   /* --- OPTIMIZED GLOW SECTION (Fixed Performance) --- */
@@ -265,45 +351,169 @@
 }
 
 
+/* CSS-level reduced motion. GSAP tweens are NOT covered by this block, so
+   every scroll animation additionally branches on the `reduce` condition in
+   gsap.matchMedia() (see src/lib/motion.js). Both layers are required. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
   html { scroll-behavior: auto; }
 }
 
 :focus-visible {
   outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* The custom cursor hides the native pointer, so keyboard users need a
+   clearly stronger focus ring than the default to stay oriented. */
+.btn:focus-visible,
+.btn-outline:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
 }
 
 /* ===========================================
    GLASS CARD - Outside @layer for production reliability
 =========================================== */
 .glass-card {
+  position: relative;
   background-color: rgba(255, 255, 255, 0.03);
-  -webkit-backdrop-filter: blur(7px);
-  backdrop-filter: blur(7px);
-  border-width: 2px;
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(140%);
+  border-width: 1px;
   border-style: solid;
   border-color: var(--color-border);
-  border-radius: 1.5rem;
-  box-shadow: 0 4px 30px rgba(74, 74, 74, 0.06);
-  transition: background-color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+  border-radius: var(--radius-card);
+  /* Two-part shadow: a tight contact shadow plus a wide ambient one.
+     Both tinted to the background hue, never pure black on light. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    0 1px 2px rgba(74, 74, 74, 0.04),
+    0 12px 40px rgba(74, 74, 74, 0.07);
+  transition: background-color var(--dur-slow) var(--ease-out-quart),
+              border-color var(--dur-slow) var(--ease-out-quart),
+              box-shadow var(--dur-slow) var(--ease-out-quart),
+              transform var(--dur-slow) var(--ease-out-expo);
 }
 
 .dark .glass-card {
   background-color: rgba(255, 255, 255, 0.02);
-  border-width: 1px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 12px 40px rgba(0, 0, 0, 0.35);
 }
 
 .glass-card:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-  box-shadow: 0 8px 40px rgba(74, 74, 74, 0.1);
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(74, 74, 74, 0.32);
+  transform: translateY(-3px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 2px 4px rgba(74, 74, 74, 0.05),
+    0 20px 60px rgba(74, 74, 74, 0.12);
 }
 
 .dark .glass-card:hover {
-  background-color: rgba(255, 255, 255, 0.04);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+  background-color: rgba(255, 255, 255, 0.045);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Cards inside a pinned horizontal track are already being transformed by
+   GSAP. A competing hover transform makes them jitter, so lift is dropped
+   there and the material change carries the hover instead. */
+.glass-card--static:hover {
+  transform: none;
+}
+
+/* Glass depends on backdrop-filter. When the user has asked for reduced
+   transparency, fall back to a solid surface that still passes contrast. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass-card {
+    background-color: var(--color-background);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* ===========================================
+   PROJECT MEDIA
+=========================================== */
+.media-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-inner);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-muted);
+}
+
+.media-frame img,
+.media-frame video {
+  display: block;
+  transition: transform var(--dur-slow) var(--ease-out-quart);
+}
+
+/* Skipped when the element carries an inline transform (imageScale), since
+   the hover scale would overwrite that crop correction. */
+.glass-card:hover .media-frame img:not([style*="scale"]),
+.glass-card:hover .media-frame video:not([style*="scale"]) {
+  transform: scale(1.03);
+}
+
+/* Placeholder shown for projects that have no capture yet. Reads as a
+   deliberate typographic panel rather than a broken image slot.
+   Replace by adding a `gif` to the project entry in Projects.jsx. */
+.media-placeholder {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  isolation: isolate;
+  background-image:
+    radial-gradient(circle at 22% 18%, rgba(74, 74, 74, 0.10), transparent 55%),
+    linear-gradient(135deg, rgba(74, 74, 74, 0.07), rgba(74, 74, 74, 0.02));
+}
+
+.dark .media-placeholder {
+  background-image:
+    radial-gradient(circle at 22% 18%, rgba(255, 255, 255, 0.10), transparent 55%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
+}
+
+/* Fine rule grid. Gives the empty panel structure without inventing a
+   fake screenshot out of divs. */
+.media-placeholder::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(to right, var(--color-border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-border) 1px, transparent 1px);
+  background-size: 38px 38px;
+  opacity: 0.4;
+  mask-image: radial-gradient(ellipse at center, #000 25%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 25%, transparent 78%);
+}
+
+.media-placeholder__label {
+  font-family: var(--font-primary);
+  font-size: clamp(1.5rem, 4.5vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--color-foreground);
+  opacity: 0.5;
+  text-align: center;
+  padding: 0 1rem;
 }

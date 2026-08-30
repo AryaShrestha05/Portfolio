@@ -1,27 +1,41 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
+import useSmoothScroll from "./hooks/useSmoothScroll";
+import useMediaQuery from "./hooks/useMediaQuery";
 import {
   GooeyNav,
   TargetCursor,
-  SmokeyCursor,
   StartScreen,
   About,
   Experience,
   Projects,
   Beyond,
   Contacts,
-  FboAnimation,
   Preloader,
   StarColorPicker,
   VisitorCounter
 } from "./components";
 
+// Split out of the initial bundle. FboAnimation pulls in three.js, which is
+// by far the largest dependency here, and both are background decoration:
+// the page is fully readable before either arrives. Loading them eagerly
+// meant blocking first paint on ~600 kB of WebGL nobody has scrolled to yet.
+const FboAnimation = lazy(() => import("./components/FboAnimation"));
+const SmokeyCursor = lazy(() => import("./components/ui/smokey-cursor"));
+
 function App() {
   const [loading, setLoading] = useState(true);
   const [starColor, setStarColor] = useState(null);
 
+  // Held back until the preloader clears. Starting Lenis while the page is
+  // still masked would let it measure a layout the user never sees.
+  useSmoothScroll(!loading);
+
+  // A real mouse or trackpad, on a screen wide enough to be a laptop.
+  const hasFinePointer = useMediaQuery('(hover: hover) and (pointer: fine) and (min-width: 1024px)');
+
   return (
     <div
-      className={`relative min-h-screen bg-background text-foreground transition-colors duration-300 ${loading ? 'cursor-none' : ''}`}
+      className={`relative min-h-[100dvh] bg-background text-foreground transition-colors duration-300 ${loading ? 'cursor-none' : ''}`}
       style={{ backgroundColor: 'var(--color-background, #ffffff)' }}
     >
       {/* 1. Hidden SVG Filter for Gooey Effects */}
@@ -38,21 +52,28 @@ function App() {
       {/* 2. Loading Screen */}
       {loading && <Preloader onComplete={() => setLoading(false)} />}
 
-      {/* 3. Custom Snapping Cursor - Hidden if loading */}
-      {!loading && <TargetCursor />}
+      {/* 3. Custom Snapping Cursor - Hidden if loading.
+          Pointless without a pointer: on touch it renders a ring that can
+          never move, and its rAF loop runs for nothing. */}
+      {!loading && hasFinePointer && <TargetCursor />}
 
-      {/* 3b. Smoke Effect following cursor */}
-      {!loading && (
-        <SmokeyCursor
-          simulationResolution={128}
-          dyeResolution={1024}
-          densityDissipation={4}
-          velocityDissipation={2.5}
-          curl={2}
-          splatRadius={0.15}
-          splatForce={3000}
-          colorUpdateSpeed={5}
-        />
+      {/* 3b. Smoke Effect following cursor.
+          Desktop and fine-pointer only. This is a second WebGL context on top
+          of the star field, and it is driven by cursor movement, so on touch
+          devices it burns battery to render an effect nobody can trigger. */}
+      {!loading && hasFinePointer && (
+        <Suspense fallback={null}>
+          <SmokeyCursor
+            simulationResolution={128}
+            dyeResolution={1024}
+            densityDissipation={4}
+            velocityDissipation={2.5}
+            curl={2}
+            splatRadius={0.15}
+            splatForce={3000}
+            colorUpdateSpeed={5}
+          />
+        </Suspense>
       )}
 
       {/* 4. Background Layer */}
@@ -60,7 +81,11 @@ function App() {
         className="fixed inset-0 z-0 bg-background transition-colors duration-300"
         style={{ backgroundColor: 'var(--color-background, #ffffff)' }}
       >
-        <FboAnimation customColor={starColor} />
+        {/* Null fallback: the solid background above is the intended
+            pre-load state, so there is nothing to swap in. */}
+        <Suspense fallback={null}>
+          <FboAnimation customColor={starColor} />
+        </Suspense>
       </div>
 
       {/* 5. Star Color Picker */}

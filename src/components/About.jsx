@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { MQ, SCRUB, EASE_SOFT, DURATION, STAGGER } from '../lib/motion';
 import headshot from '../assets/photos/Arya_S_Headshot.jpg';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -13,69 +14,66 @@ const About = () => {
   const imageCardRef = useRef();
 
   useEffect(() => {
-    let mm = gsap.matchMedia();
+    const mm = gsap.matchMedia();
 
-    mm.add("(min-width: 1024px)", () => {
-      // Desktop Animations
+    mm.add(MQ, (context) => {
+      const { isDesktop, reduce } = context.conditions;
+      const targets = [aboutTextRef.current, meTextRef.current, cardRef.current, imageCardRef.current];
+
+      if (reduce) {
+        gsap.set(targets, { clearProps: 'all' });
+        return;
+      }
+
       gsap.fromTo(
-        [aboutTextRef.current, meTextRef.current, cardRef.current, imageCardRef.current],
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 1, scrollTrigger: { trigger: sectionRef.current, start: "top 70%" } }
+        targets,
+        { opacity: 0, y: isDesktop ? 24 : 16 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: DURATION,
+          stagger: STAGGER,
+          ease: EASE_SOFT,
+          scrollTrigger: { trigger: sectionRef.current, start: isDesktop ? 'top 70%' : 'top 80%' },
+        }
       );
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
+      // Counter-drifting title halves plus a slower card layer. Three speeds
+      // read as depth; the image moves most because it is nearest the eye.
+      const titleDrift = isDesktop ? 150 : 40;
+      const cardDrift = isDesktop ? 40 : 18;
+      const imageDrift = isDesktop ? 80 : 28;
 
-      tl.fromTo(aboutTextRef.current, { x: 150 }, { x: -150, ease: "none" }, 0)
-        .fromTo(meTextRef.current, { x: -150 }, { x: 150, ease: "none" }, 0)
-        .fromTo(cardRef.current, { y: 40 }, { y: -40, ease: "none" }, 0)
-        .fromTo(imageCardRef.current, { y: 80 }, { y: -80, ease: "none" }, 0);
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: SCRUB,
+          },
+        })
+        .fromTo(aboutTextRef.current, { x: titleDrift }, { x: -titleDrift, ease: 'none' }, 0)
+        .fromTo(meTextRef.current, { x: -titleDrift }, { x: titleDrift, ease: 'none' }, 0)
+        .fromTo(cardRef.current, { y: cardDrift }, { y: -cardDrift, ease: 'none' }, 0)
+        .fromTo(imageCardRef.current, { y: imageDrift }, { y: -imageDrift, ease: 'none' }, 0);
     });
 
-    mm.add("(max-width: 1023px)", () => {
-      // Mobile Animations: Reduced movement to prevent horizontal scroll issues
-      gsap.fromTo(
-        [aboutTextRef.current, meTextRef.current, cardRef.current, imageCardRef.current],
-        { opacity: 0, scale: 0.95 },
-        { opacity: 1, scale: 1, duration: 0.8, scrollTrigger: { trigger: sectionRef.current, start: "top 80%" } }
-      );
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 0.5,
-        },
-      });
-
-      tl.fromTo(aboutTextRef.current, { x: 40 }, { x: -40, ease: "none" }, 0)
-        .fromTo(meTextRef.current, { x: -40 }, { x: 40, ease: "none" }, 0)
-        .fromTo(cardRef.current, { y: 20 }, { y: -20, ease: "none" }, 0)
-        .fromTo(imageCardRef.current, { y: 30 }, { y: -30, ease: "none" }, 0);
-    });
-
-    return () => mm.revert(); // Cleanup
+    return () => mm.revert();
   }, []);
 
   return (
     <section
       ref={sectionRef}
       id="about"
-      className="min-h-screen py-20 md:py-24 flex flex-col items-center justify-center md:justify-end overflow-hidden relative"
+      className="min-h-[100dvh] py-20 md:py-24 flex flex-col items-center justify-center md:justify-end overflow-hidden relative"
     >
       {/* Parallax Headers */}
       <div className="absolute top-[12%] md:top-[10%] flex flex-col items-center select-none pointer-events-none z-0">
-        <h3 ref={aboutTextRef} className="section-title !leading-[0.7] text-5xl sm:text-6xl md:text-7xl lg:text-9xl will-change-transform">
+        <h3 ref={aboutTextRef} className="section-title !leading-[0.7] will-change-transform">
           about
         </h3>
-        <h3 ref={meTextRef} className="section-title !leading-[0.9] text-5xl sm:text-6xl md:text-7xl lg:text-9xl ml-8 lg:ml-0 shadow-text will-change-transform">
+        <h3 ref={meTextRef} className="section-title !leading-[0.9] ml-8 lg:ml-0 will-change-transform">
           me
         </h3>
       </div>
@@ -86,16 +84,26 @@ const About = () => {
           
           {/* Left: Info Card */}
           <div ref={cardRef} className="w-full md:flex-1 glass-card p-6 md:p-10 will-change-transform">
-            <p className="text-xl md:text-2xl font-semibold mb-4 md:mb-6 lowercase text-foreground">
+            <p className="text-xl md:text-2xl font-semibold mb-5 md:mb-7 lowercase text-foreground">
               i'm arya, but i'm also:
             </p>
 
-            <ul className="list-disc list-inside text-base md:text-lg space-y-3 md:space-y-4 leading-relaxed lowercase text-muted-foreground font-sans">
-              <li>studying <span className="text-foreground font-medium">computer science</span> @ marist university.</li>
-              <li>previous swe intern @ <span className="text-foreground font-medium">docere</span>.</li>
-              <li>automating <span className="text-foreground font-medium">trust/will docs</span> for attorneys.</li>
-              <li>tech fellow @ <span className="text-foreground font-medium">headstart</span>.</li>
-              <li>phase 2 fellow @ <span className="text-foreground font-medium">propel2excel</span>.</li>
+            <ul className="text-base md:text-lg space-y-3 md:space-y-4 leading-relaxed lowercase text-muted-foreground font-sans">
+              {[
+                <>studying <span className="text-foreground font-medium">computer science and cybersecurity</span> @ marist university.</>,
+                <><span className="text-foreground font-medium">undergraduate research assistant</span> building network protocols in c.</>,
+                <>previous swe intern @ <span className="text-foreground font-medium">advocacy financial</span>.</>,
+                <>automating <span className="text-foreground font-medium">trust and will docs</span> for attorneys.</>,
+                <>tech fellow @ <span className="text-foreground font-medium">headstart</span>, phase 2 fellow @ <span className="text-foreground font-medium">propel2excel</span>.</>,
+              ].map((line, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span
+                    aria-hidden="true"
+                    className="mt-[11px] h-[3px] w-[3px] flex-shrink-0 rounded-full bg-muted-foreground"
+                  />
+                  <span>{line}</span>
+                </li>
+              ))}
             </ul>
           </div>
 

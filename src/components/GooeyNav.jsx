@@ -126,11 +126,18 @@ const GooeyNav = ({
     }
 
     // Scroll Logic
+    // Route through Lenis when it is running (see hooks/useSmoothScroll.js).
+    // Native scrollIntoView sets scrollTop directly, which fights Lenis for
+    // control of the same scroll and makes the jump stutter.
     const href = items[index].href;
     const targetId = href.substring(1);
     const targetElement = document.getElementById(targetId);
     if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth' });
+      if (window.__lenis) {
+        window.__lenis.scrollTo(targetElement, { offset: -80, duration: 1.4 });
+      } else {
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+      }
     }
 
     if (onItemClick) {

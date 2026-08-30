@@ -3,6 +3,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { FaEnvelope, FaLinkedin, FaGithub, FaInstagram } from 'react-icons/fa';
 import { SiDevpost } from 'react-icons/si';
+import { MQ, SCRUB, SCRUB_SLOW, EASE_SOFT, DURATION, STAGGER } from '../lib/motion';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,124 +23,106 @@ const Contacts = () => {
   ];
 
   useEffect(() => {
-    let mm = gsap.matchMedia();
+    const mm = gsap.matchMedia();
 
-    // Title entrance animation
-    gsap.fromTo(
-      [letsRef.current, connectRef.current],
-      { opacity: 0 },
-      {
-        opacity: 1,
-        duration: 1,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%",
-        }
+    // Everything lives inside matchMedia so mm.revert() actually tears it
+    // all down, and so the `reduce` branch can skip it wholesale.
+    mm.add(MQ, (context) => {
+      const { isDesktop, reduce } = context.conditions;
+      const links = linksRef.current.filter(Boolean);
+      const titles = [letsRef.current, connectRef.current];
+
+      if (reduce) {
+        gsap.set([...titles, ...links, footerRef.current], { clearProps: 'all' });
+        return;
       }
-    );
 
-    mm.add("(min-width: 1024px)", () => {
-      // Desktop parallax
-      const parallaxTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
-
-      parallaxTl
-        .fromTo(letsRef.current, { x: 150 }, { x: -150, ease: "none" }, 0)
-        .fromTo(connectRef.current, { x: -150 }, { x: 150, ease: "none" }, 0);
-    });
-
-    mm.add("(max-width: 1023px)", () => {
-      // Mobile/tablet parallax - reduced movement
-      const parallaxTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
-
-      parallaxTl
-        .fromTo(letsRef.current, { x: 50 }, { x: -50, ease: "none" }, 0)
-        .fromTo(connectRef.current, { x: -50 }, { x: 50, ease: "none" }, 0);
-    });
-
-    // Links animation - each icon comes from a different direction
-    const directions = [
-      { x: -60, y: -40 },   // Email - from top-left
-      { x: 0, y: -60 },     // LinkedIn - from top
-      { x: 0, y: 60 },      // GitHub - from bottom
-      { x: 60, y: -40 },    // Instagram - from top-right
-      { x: 80, y: 0 },      // Devpost - from right
-    ];
-
-    linksRef.current.forEach((link, i) => {
-      if (!link) return;
-
-      // Set initial state immediately
-      gsap.set(link, {
-        opacity: 0,
-        x: directions[i].x,
-        y: directions[i].y,
-        scale: 0.6,
-        rotation: (i % 2 === 0) ? -10 : 10
-      });
-
-      // Entrance animation
-      gsap.to(link, {
-        opacity: 1,
-        x: 0,
-        y: 0,
-        scale: 1,
-        rotation: 0,
-        duration: 1,
-        delay: i * 0.08,
-        ease: "back.out(1.7)",
-        force3D: true,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 55%",
+      gsap.fromTo(
+        titles,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: DURATION,
+          ease: EASE_SOFT,
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 80%' },
         }
+      );
+
+      const drift = isDesktop ? 150 : 50;
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: SCRUB,
+          },
+        })
+        .fromTo(letsRef.current, { x: drift }, { x: -drift, ease: 'none' }, 0)
+        .fromTo(connectRef.current, { x: -drift }, { x: drift, ease: 'none' }, 0);
+
+      // Each icon converges from a different edge, so the row assembles
+      // rather than fading in as one block.
+      const directions = [
+        { x: -60, y: -40 }, // email, from top-left
+        { x: 0, y: -60 },   // linkedin, from top
+        { x: 0, y: 60 },    // github, from bottom
+        { x: 60, y: -40 },  // instagram, from top-right
+        { x: 80, y: 0 },    // devpost, from right
+      ];
+
+      links.forEach((link, i) => {
+        const from = directions[i] ?? { x: 0, y: 40 };
+
+        gsap.set(link, {
+          opacity: 0,
+          x: from.x,
+          y: from.y,
+          scale: 0.6,
+          rotation: i % 2 === 0 ? -10 : 10,
+        });
+
+        gsap.to(link, {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          scale: 1,
+          rotation: 0,
+          duration: DURATION,
+          delay: i * STAGGER,
+          ease: 'back.out(1.7)',
+          force3D: true,
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 55%' },
+        });
+
+        // Gentle scroll-linked float. Keeps the row from feeling frozen
+        // once it has landed.
+        const dir = i % 2 === 0 ? 1 : -1;
+        gsap.to(link, {
+          y: dir * (15 + i * 5),
+          rotation: dir * 3,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top center',
+            end: 'bottom top',
+            scrub: SCRUB_SLOW,
+          },
+        });
       });
 
-      // Continuous scroll-linked floating animation
-      const floatDirection = i % 2 === 0 ? 1 : -1;
-      const floatAmount = 15 + (i * 5); // Each button floats differently
-
-      gsap.to(link, {
-        y: floatDirection * floatAmount,
-        rotation: floatDirection * 3,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top center",
-          end: "bottom top",
-          scrub: 1.5,
+      gsap.fromTo(
+        footerRef.current,
+        { opacity: 0, y: 20 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: DURATION,
+          ease: EASE_SOFT,
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 40%' },
         }
-      });
+      );
     });
-
-    // Footer animation
-    gsap.fromTo(
-      footerRef.current,
-      { opacity: 0, y: 20 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 40%",
-        }
-      }
-    );
 
     return () => mm.revert();
   }, []);
@@ -148,14 +131,14 @@ const Contacts = () => {
     <section
       ref={sectionRef}
       id="contacts"
-      className="min-h-screen py-20 md:py-32 flex flex-col items-center relative overflow-hidden"
+      className="min-h-[100dvh] py-20 md:py-32 flex flex-col items-center relative overflow-hidden"
     >
       {/* Split Title with parallax */}
       <div className="w-full flex flex-col items-center mb-16 md:mb-20 select-none pointer-events-none">
-        <h2 ref={letsRef} className="section-title text-5xl sm:text-6xl md:text-7xl lg:text-9xl !leading-[0.9]">
+        <h2 ref={letsRef} className="section-title !leading-[0.9]">
           let's
         </h2>
-        <h2 ref={connectRef} className="section-title text-5xl sm:text-6xl md:text-7xl lg:text-9xl mt-1 !leading-[0.9]">
+        <h2 ref={connectRef} className="section-title mt-1 !leading-[0.9]">
           connect!
         </h2>
       </div>

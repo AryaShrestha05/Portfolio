@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { MQ, SCRUB, EASE_SOFT, DURATION } from '../lib/motion';
 import RotatingText from './RotatingText';
 import ResumeModal from './ResumeModal';
 
@@ -14,75 +15,75 @@ const StartScreen = () => {
   const [isResumeOpen, setIsResumeOpen] = useState(false);
 
   useEffect(() => {
-    const textTop = gsap.timeline();
-    const textBottom = gsap.timeline();
-    const button = gsap.timeline();
-    const subtitle = gsap.timeline();
+    const mm = gsap.matchMedia();
 
-    textTop.fromTo(
-      trigRef.current,
-      { opacity: 0, x: 150 },
-      { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" }
-    ).to(trigRef.current, {
-      x: 15,
-      duration: 3,
-      ease: "sine.inOut",
-      yoyo: true,
-      repeat: -1
-    });
+    mm.add(MQ, (context) => {
+      const { isDesktop, reduce } = context.conditions;
+      const targets = [trigRef.current, trigRefTwo.current, subtitleRef.current, btnRef.current];
 
-    textBottom.fromTo(
-      trigRefTwo.current,
-      { opacity: 0, x: -150 },
-      { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" }
-    ).to(trigRefTwo.current, {
-      x: -15,
-      duration: 3,
-      ease: "sine.inOut",
-      yoyo: true,
-      repeat: -1
-    });
+      // Reduced motion: everything lands in its final state immediately.
+      if (reduce) {
+        gsap.set(targets, { clearProps: 'all', opacity: 1, x: 0, y: 0 });
+        return;
+      }
 
-    subtitle.fromTo(
-      subtitleRef.current,
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 1.2, ease: "power2.out", delay: 0.5 }
-    );
+      // Entrance. The two name rows arrive from opposite sides, then settle
+      // into a slow counter-drift that keeps the hero alive while idle.
+      gsap
+        .timeline()
+        .fromTo(
+          trigRef.current,
+          { opacity: 0, x: 150 },
+          { opacity: 1, x: 0, duration: 0.9, ease: EASE_SOFT }
+        )
+        .to(trigRef.current, {
+          x: 15,
+          duration: 3.5,
+          ease: 'sine.inOut',
+          yoyo: true,
+          repeat: -1,
+        });
 
-    button.fromTo(
-      btnRef.current,
-      { opacity: 0, y: 100 },
-      { opacity: 1, y: 0, duration: 1.5, ease: "power2.out" }
-    );
+      gsap
+        .timeline()
+        .fromTo(
+          trigRefTwo.current,
+          { opacity: 0, x: -150 },
+          { opacity: 1, x: 0, duration: 0.9, ease: EASE_SOFT }
+        )
+        .to(trigRefTwo.current, {
+          x: -15,
+          duration: 3.5,
+          ease: 'sine.inOut',
+          yoyo: true,
+          repeat: -1,
+        });
 
-    let mm = gsap.matchMedia();
+      gsap.fromTo(
+        subtitleRef.current,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: DURATION, ease: EASE_SOFT, delay: 0.45 }
+      );
 
-    mm.add("(min-width: 1024px)", () => {
-      const scrollAnimation = gsap.timeline({
-        scrollTrigger: {
-          trigger: "#start-screen",
-          start: "top top",
-          end: "+=1500",
-          scrub: 1,
-        },
-      });
+      gsap.fromTo(
+        btnRef.current,
+        { opacity: 0, y: 60 },
+        { opacity: 1, y: 0, duration: DURATION, ease: EASE_SOFT, delay: 0.65 }
+      );
 
-      scrollAnimation.to(trigRef.current, { x: -300, ease: "none" }, 0)
-        .to(trigRefTwo.current, { x: 300, ease: "none" }, 0);
-    });
-
-    mm.add("(max-width: 1023px)", () => {
-      const scrollAnimation = gsap.timeline({
-        scrollTrigger: {
-          trigger: "#start-screen",
-          start: "top top",
-          end: "+=1000",
-          scrub: 1,
-        },
-      });
-
-      scrollAnimation.to(trigRef.current, { x: -100, ease: "none" }, 0)
-        .to(trigRefTwo.current, { x: 100, ease: "none" }, 0);
+      // On scroll the two rows pull apart, opening the page beneath them.
+      const exit = isDesktop ? 300 : 100;
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: '#start-screen',
+            start: 'top top',
+            end: isDesktop ? '+=1500' : '+=1000',
+            scrub: SCRUB,
+          },
+        })
+        .to(trigRef.current, { x: -exit, ease: 'none' }, 0)
+        .to(trigRefTwo.current, { x: exit, ease: 'none' }, 0);
     });
 
     return () => mm.revert();
@@ -92,7 +93,7 @@ const StartScreen = () => {
     <section
       id="start-screen"
       /* Added font-primary class here to cover the whole section */
-      className="min-h-screen w-full flex flex-col items-center justify-center space-y-6 overflow-hidden font-primary"
+      className="min-h-[100dvh] w-full flex flex-col items-center justify-center space-y-6 overflow-hidden font-primary"
     >
       {/* Main name display */}
       <h1
