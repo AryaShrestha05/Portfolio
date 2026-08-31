@@ -15,43 +15,32 @@ gsap.registerPlugin(ScrollTrigger);
 
 const items = [
   {
-    role: 'undergraduate research assistant',
-    company: 'marist university',
-    logo: maristLogo,
-    logoZoom: true,
-    period: 'jan 2026 - present',
-    points: [
-      'designed a network protocol in c, cutting packet delay 2.62x for 7,000+ daily users',
-      'automated a 24/7 testing pipeline across 6 tcp protocols with python and docker',
-      'wrote custom linux kernel modules in c for zero downtime benchmarking',
-    ],
-    link: 'https://www.marist.edu/',
-  },
-  {
     role: 'software engineer intern',
     company: 'advocacy financial',
     logo: advocacyLogo,
-    period: 'may 2025 - aug 2025',
+    period: 'aug 2026 - present',
     points: [
-      'built a legal saas platform for 60+ attorneys, cutting prep time 40%',
-      'designed a 55-table multi-tenant architecture for client asset portfolios',
-      'built a jest suite across 86 api endpoints, cutting production bugs 40%',
+      'shipping a legal saas platform used by 60+ attorneys, cutting document prep time 40%',
+      'designed the 55-table multi-tenant schema behind every client asset portfolio',
+      'own the jest suite across 86 api endpoints, which took production bugs down 40%',
+      'work directly with attorneys to turn casework into features they actually use',
     ],
     link: 'https://legacylouisiana.vercel.app/',
     linkLabel: 'the product',
   },
   {
-    role: 'lms quality developer',
+    role: 'undergraduate research assistant',
     company: 'marist university',
     logo: maristLogo,
     logoZoom: true,
-    period: 'apr 2025 - present',
+    period: 'may 2026 - aug 2026',
     points: [
-      'developed a 150+ page digital education site',
-      'audited 3,000+ courses for wcag compliance',
-      'resolved platform issues via jira',
+      'designed a network protocol in c that cut packet delay 2.62x for 7,000+ daily users',
+      'automated a 24/7 benchmarking pipeline across 6 tcp protocols with python and docker',
+      'wrote custom linux kernel modules in c so tests ran with zero downtime',
+      'turned the results into reproducible reports the lab still runs against',
     ],
-    link: 'https://my.de.marist.edu/',
+    link: 'https://www.marist.edu/',
   },
   {
     role: 'tech fellow',
@@ -59,11 +48,24 @@ const items = [
     logo: headstartLogo,
     period: 'spring 2026 cohort',
     points: [
-      'mentorship from industry professionals',
-      'f500 recruiting connections',
-      'career development workshops',
+      'selected cohort with 1:1 mentorship from industry engineers',
+      'recruiting pipeline into f500 and high-growth startup teams',
+      'weekly workshops on system design and technical interviewing',
     ],
     link: 'https://www.headstartfellowship.com/',
+  },
+  {
+    role: 'lms quality developer',
+    company: 'marist university',
+    logo: maristLogo,
+    logoZoom: true,
+    period: 'apr 2025 - may 2026',
+    points: [
+      'built and maintain a 150+ page digital education site used campus-wide',
+      'audited 3,000+ courses for wcag compliance and fixed what failed',
+      'triage and resolve platform issues through jira alongside faculty',
+    ],
+    link: 'https://my.de.marist.edu/',
   },
   {
     role: 'phase 2 fellow',
@@ -71,9 +73,9 @@ const items = [
     logo: propelLogo,
     period: '2025 - present',
     points: [
-      'direct phase 2 admission, roughly 1% acceptance',
-      '1:1 mentorship for target company prep',
-      'interview and resume coaching',
+      'admitted directly to phase 2, roughly a 1% acceptance rate',
+      '1:1 mentorship aimed at target-company technical prep',
+      'ongoing interview, resume, and portfolio coaching',
     ],
     link: 'https://www.propel2excel.com/',
   },
@@ -83,9 +85,9 @@ const items = [
     logo: colorstackLogo,
     period: '2025 - present',
     points: [
-      'resume reviews and peer mentorship for freshmen',
-      'recruiting and networking events',
-      'community for underrepresented students in tech',
+      'run resume reviews and peer mentorship for incoming freshmen',
+      'recruiting and networking events with partner engineering teams',
+      'community of underrepresented students building in tech together',
     ],
     link: 'https://www.colorstack.org/',
   },
@@ -116,8 +118,11 @@ const Experience = () => {
       const slider = sliderRef.current;
       const cards = cardsRef.current.filter(Boolean);
       const drift = isDesktop ? 250 : 80;
-      const restScale = isDesktop ? 0.62 : 0.82;
-      const focusScale = isDesktop ? 0.86 : 0.96;
+      // Scale is a focus cue, not a layout tool: the focused card sits at 1:1 so
+      // its body copy renders at its real size, and rest stays close enough that
+      // off-centre cards are still readable.
+      const restScale = isDesktop ? 0.88 : 0.94;
+      const focusScale = 1;
 
       // Title fades up once, then drifts against the track for depth.
       gsap.fromTo(
@@ -220,7 +225,7 @@ const Experience = () => {
         >
           <div
             ref={sliderRef}
-            className="flex items-center gap-5 lg:gap-6"
+            className="flex items-stretch gap-5 lg:gap-6"
             style={
               prefersReduced
                 ? { width: 'max-content' }
@@ -235,7 +240,7 @@ const Experience = () => {
               <article
                 key={`${item.company}-${item.role}`}
                 ref={(el) => (cardsRef.current[index] = el)}
-                className="glass-card glass-card--static flex-shrink-0 w-[280px] sm:w-[300px] lg:w-[400px] h-[460px] sm:h-[480px] lg:h-[430px] p-5 sm:p-6 lg:p-9 flex flex-col"
+                className="glass-card glass-card--static flex-shrink-0 w-[280px] sm:w-[300px] lg:w-[400px] min-h-[440px] p-5 sm:p-6 lg:p-9 flex flex-col"
               >
                 {/* Every entry currently has a logo. The monogram branch is
                     the fallback for future entries added before their brand
@@ -261,37 +266,37 @@ const Experience = () => {
                   )}
                 </div>
 
-                <h4 className="text-2xl md:text-[1.75rem] font-bold leading-tight mb-1 text-foreground">
+                <h4 className="text-2xl md:text-[1.75rem] font-bold leading-tight text-balance mb-1 text-foreground">
                   {item.company}
                 </h4>
 
-                <p className="text-[11px] md:text-[12px] font-semibold mb-4 md:mb-6 uppercase tracking-widest text-muted-foreground font-sans">
+                <p className="text-[12px] md:text-[13px] font-semibold mb-4 md:mb-6 uppercase tracking-wide text-muted-foreground font-sans">
                   {item.role}
-                  <span className="block mt-1 normal-case tracking-wide opacity-80">
+                  <span className="block mt-1 normal-case tracking-wide">
                     {item.period}
                   </span>
                 </p>
 
-                <ul className="space-y-2.5 md:space-y-3 mb-5 font-sans flex-grow">
+                <ul className="space-y-2.5 md:space-y-3 font-sans flex-grow">
                   {item.points.map((point) => (
                     <li key={point} className="flex items-start gap-2.5">
                       <span
                         aria-hidden="true"
-                        className="mt-[7px] h-[3px] w-[3px] flex-shrink-0 rounded-full bg-muted-foreground"
+                        className="mt-[9px] h-[4px] w-[4px] flex-shrink-0 rounded-full bg-muted-foreground"
                       />
-                      <p className="text-[13px] md:text-[14px] leading-snug font-light lowercase text-muted-foreground">
+                      <p className="min-w-0 break-words text-[14px] md:text-[15px] leading-relaxed lowercase text-foreground">
                         {point}
                       </p>
                     </li>
                   ))}
                 </ul>
 
-                <div className="flex gap-3 mt-auto">
+                <div className="flex gap-3 mt-auto pt-5 border-t border-border/60">
                   <a
                     href={item.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn cursor-target text-[11px] font-bold uppercase tracking-tighter"
+                    className="btn cursor-target text-[12px] font-bold uppercase tracking-tight"
                     data-cursor-text="Visit"
                   >
                     {item.linkLabel ?? 'website'}
